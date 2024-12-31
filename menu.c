@@ -48,7 +48,7 @@ char* display_menu() {
     init_pair(1, COLOR_YELLOW, COLOR_BLACK);
     init_pair(2, COLOR_WHITE, COLOR_BLUE);
     init_pair(3, COLOR_CYAN, COLOR_BLACK);
-
+    curs_set(0);
     clear();
     noecho();
     cbreak();
@@ -60,8 +60,8 @@ char* display_menu() {
 
     menu_win = newwin(height, width, starty, startx);
     keypad(menu_win, TRUE);
-    mvprintw(13, (COLS - width) / 2 + 9, "Welcome to AID Rouge =)");
-    mvprintw(15, (COLS - width) / 2 - 11, "Use arrow keys to go up and down, press enter to select a choice!");
+    mvprintw(LINES / 2 - 20, (COLS - width) / 2 + 9, "Welcome to AID Rouge =)");
+    mvprintw(LINES / 2 - 15, (COLS - width) / 2 - 11, "Use arrow keys to go up and down, press enter to select a choice!");
     refresh();
     print_menu(menu_win, highlight, choices, n_choices);
     while(1) {
@@ -76,12 +76,19 @@ char* display_menu() {
             case KEY_DOWN:
                 if (highlight == n_choices)
                     highlight = 1;
-                else 
+                else
                     ++highlight;
                 break;
             case 10:
                 choice = highlight;
                 break;
+            case 27:
+                snprintf(result, sizeof(result), "%s", "exit");
+                clrtoeol();
+                refresh();
+                delwin(menu_win);
+                endwin();
+                return result;
             default:
                 break;
         }
@@ -92,6 +99,7 @@ char* display_menu() {
     snprintf(result, sizeof(result), "%s", choices[choice - 1]);
     clrtoeol();
     refresh();
+    delwin(menu_win);
     endwin();
     return result;
 }
