@@ -127,9 +127,9 @@ void play_music(const char *filepath) {
     Mix_PlayMusic(music, 1);
 
     printf("Playing %s...\nPress Enter to stop the music.\n", filepath);
-    getchar();
+    // getchar();
 
-    Mix_FreeMusic(music);
-    Mix_CloseAudio();
-    SDL_Quit();
+    // Mix_FreeMusic(music);
+    // Mix_CloseAudio();
+    // SDL_Quit();
 }
