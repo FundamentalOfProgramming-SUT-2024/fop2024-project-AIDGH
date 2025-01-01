@@ -1,4 +1,4 @@
-#include "user_input.h"
+#include "sign_up.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -6,7 +6,7 @@
 #include <ncurses.h>
 #include <time.h>
 
-void get_input(WINDOW *win, int y, int x, char *prompt, char *input, int length) {
+void get_input_sign_up(WINDOW *win, int y, int x, char *prompt, char *input, int length) {
     char full_prompt[100];
     snprintf(full_prompt, sizeof(full_prompt), "%s", prompt); // ساختن رشته فرمتی
     mvwprintw(win, y, x, "%s", full_prompt); // استفاده از رشته فرمتی
@@ -20,12 +20,12 @@ void get_input(WINDOW *win, int y, int x, char *prompt, char *input, int length)
         } else if (ch == KEY_BACKSPACE || ch == 127) { // حذف آخرین کاراکتر
             if (i > 0) {
                 i--;
-                mvwprintw(win, y, x + strlen(prompt) + i, " ");
+                mvwprintw(win, y, x + strlen(prompt) + i - 15, " ");
                 wmove(win, y, x + strlen(prompt) + i);
             }
         } else if (i < length - 1) {
             input[i++] = ch;
-            mvwprintw(win, y, x + strlen(prompt) + i - 1, "%c", ch);
+            mvwprintw(win, y, x + strlen(prompt) + i - 1 - 15, "%c", ch);
         }
         wrefresh(win);
     }
@@ -33,7 +33,7 @@ void get_input(WINDOW *win, int y, int x, char *prompt, char *input, int length)
     noecho();
 }
 
-int username_exists(const char *username) {
+int username_exists_sign_up(const char *username) {
     FILE *file = fopen("users.txt", "r");
     if (file == NULL) {
         return 0;
@@ -108,12 +108,12 @@ void user_input_screen() {
     // گرفتن اطلاعات از کاربر و بررسی وجود نام کاربری
     int esc_pressed = 0;
     while (1) {
-        get_input(win, 2, 2, "Enter Username: ", username, 50);
+        get_input_sign_up(win, 2, 2, "Enter Username:                ", username, 50);
         if (username[0] == '\0') { // کاربر ESC رو فشار داد
             esc_pressed = 1;
             break;
         }
-        if (username_exists(username)) {
+        if (username_exists_sign_up(username)) {
             mvwprintw(win, 14, 2, "Username already exists. Try another.");
         } else {
             break;
@@ -124,7 +124,7 @@ void user_input_screen() {
 
     if (!esc_pressed && username[0] != 0) { // ادامه به گرفتن اطلاعات فقط اگر کاربر ESC رو فشار نداده
         while (1) {
-            get_input(win, 4, 2, "Enter Email: ", email, 50);
+            get_input_sign_up(win, 4, 2, "Enter Email:                ", email, 50);
             if (email[0] == '\0') { // کاربر ESC رو فشار داد
                 esc_pressed = 1;
                 break;
@@ -133,6 +133,7 @@ void user_input_screen() {
                 break;
             } else {
                 mvwprintw(win, 14, 2, "Invalid email format. Try again.");
+                memset(email, 0, sizeof(email));
             }
             wrefresh(win);
         }
@@ -149,7 +150,7 @@ void user_input_screen() {
                     if (i == highlight) {
                         wattron(win, A_REVERSE);
                     }
-                    mvwprintw(win, 7 + i * 2, 2, "%s", choices[i]); // استفاده از فرمت رشته ثابت
+                    mvwprintw(win, 6 + i * 2, 2, "%s", choices[i]); // استفاده از فرمت رشته ثابت
                     wattroff(win, A_REVERSE);
                 }
                 int choice = wgetch(win);
@@ -168,7 +169,7 @@ void user_input_screen() {
                         if (highlight == 0) {
                             wmove(win, 6 + highlight * 2, 2 + strlen(choices[0]) + 1); // جابجایی نشانگر به محل مناسب
                             wrefresh(win);
-                            get_input(win, 8, 2, "Password: ", password, 50); // تغییر مکان ورودی رمز عبور
+                            get_input_sign_up(win, 8, 2, "Password:                ", password, 50); // تغییر مکان ورودی رمز عبور
                             if (password[0] == '\0') { // کاربر ESC رو فشار داد
                                 esc_pressed = 1;
                                 break;

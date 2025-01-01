@@ -3,8 +3,8 @@
 
 #include <ncurses.h>
 
-void get_input(WINDOW *win, int y, int x, char *prompt, char *input, int length);
-int username_exists(const char *username);
+void get_input_sign_up(WINDOW *win, int y, int x, char *prompt, char *input, int length);
+int username_exists_sign_up(const char *username);
 void save_user_info(const char *username, const char *email, const char *password);
 void user_input_screen();
 int validate_password(const char *password);

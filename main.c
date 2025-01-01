@@ -7,21 +7,12 @@
 #include "menu.h"
 #include "outro.h"
 #include "music.h"
-#include "user_input.h"
+#include "login.h"
+#include "sign_up.h"
 
-#include <ncurses.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <time.h>
-#include <string.h>
-#include "menu.h"
-#include "outro.h"
-#include "music.h"
-#include "user_input.h"
+char which_menu[50] = "menu";
 
 int main() {
-    char* which_menu = "menu";
     initscr();
     start_color();
     init_pair(1, COLOR_YELLOW, COLOR_BLACK);
@@ -31,16 +22,16 @@ int main() {
     noecho();
     cbreak();
 
-    while(1) {
-        if(!strcmp(which_menu, "exit")) {
+    while (1) {
+        if (!strcmp(which_menu, "exit")) {
             clear();
             refresh();
             display_message();
             break;
-        } else if(!strcmp(which_menu, "menu")) {
+        } else if (!strcmp(which_menu, "menu")) {
             clear();
             refresh();
-            which_menu = display_menu();
+            strcpy(which_menu, display_menu());
         } else if (!strcmp(which_menu, " MUSIC ")) {
             clear();
             refresh();
@@ -48,12 +39,26 @@ int main() {
             if (selected_music != NULL) {
                 play_music(selected_music);
             }
-            which_menu = "menu";
-        } else if (!strcmp(which_menu, " CREATE NEW USER ")) {
+            strcpy(which_menu, "menu");
+        } else if (!strcmp(which_menu, " SIGN UP ")) {
             clear();
             refresh();
-            user_input_screen();
-            which_menu = "menu";
+            user_input_screen(); // صدا زدن تابع ثبت نام
+            strcpy(which_menu, "menu");
+        } else if (!strcmp(which_menu, " LOGIN ")) { // اضافه کردن حالت ورود
+            clear();
+            refresh();
+            login_screen(); // صدا زدن تابع ورود
+            // printf("menu is:\n");
+            // puts(which_menu);
+            // strcpy(which_menu, "Before game menu"); // تغییر وضعیت به "Before game menu"
+        } else if (!strcmp(which_menu, "Before game menu")) {
+            clear();
+            refresh();
+            // تابع مربوط به منوی قبل از بازی را اینجا صدا بزنید
+            // مثلا: before_game_menu();
+            // در نهایت وضعیت which_menu را به مقدار مناسب تغییر دهید
+            strcpy(which_menu, "menu");
         }
     }
 
