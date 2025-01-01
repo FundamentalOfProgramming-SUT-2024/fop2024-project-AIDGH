@@ -8,16 +8,16 @@
 
 void get_input_sign_up(WINDOW *win, int y, int x, char *prompt, char *input, int length) {
     char full_prompt[100];
-    snprintf(full_prompt, sizeof(full_prompt), "%s", prompt); // ساختن رشته فرمتی
-    mvwprintw(win, y, x, "%s", full_prompt); // استفاده از رشته فرمتی
+    snprintf(full_prompt, sizeof(full_prompt), "%s", prompt);
+    mvwprintw(win, y, x, "%s", full_prompt);
     wrefresh(win);
 
     int ch, i = 0;
     while (1) {
         ch = wgetch(win);
-        if (ch == '\n' || ch == 27) { // 27 کد ASCII برای ESC است
+        if (ch == '\n' || ch == 27) {
             break;
-        } else if (ch == KEY_BACKSPACE || ch == 127) { // حذف آخرین کاراکتر
+        } else if (ch == KEY_BACKSPACE || ch == 127) {
             if (i > 0) {
                 i--;
                 mvwprintw(win, y, x + strlen(prompt) + i - 15, " ");
@@ -92,24 +92,23 @@ void generate_random_password(char *password, int length) {
 }
 
 void user_input_screen() {
-    int height = 17; // افزایش ارتفاع کادر
-    int width = 60; // افزایش عرض کادر
+    int height = 17;
+    int width = 60;
     int start_y = (LINES - height) / 2;
     int start_x = (COLS - width) / 2;
 
     WINDOW *win = newwin(height, width, start_y, start_x);
     box(win, 0, 0);
-    mvwprintw(win, 0, (width - strlen("User Information")) / 2, "User Information"); // عنوان بالای کادر
+    mvwprintw(win, 0, (width - strlen("[User Information]")) / 2, "[User Information]");
 
     char username[50];
     char email[50];
     char password[50];
 
-    // گرفتن اطلاعات از کاربر و بررسی وجود نام کاربری
     int esc_pressed = 0;
     while (1) {
         get_input_sign_up(win, 2, 2, "Enter Username:                ", username, 50);
-        if (username[0] == '\0') { // کاربر ESC رو فشار داد
+        if (username[0] == '\0') {
             esc_pressed = 1;
             break;
         }
@@ -119,13 +118,13 @@ void user_input_screen() {
             break;
         }
         wrefresh(win);
-        memset(username, 0, sizeof(username)); // پاک کردن نام کاربری وارد شده
+        memset(username, 0, sizeof(username));
     }
 
-    if (!esc_pressed && username[0] != 0) { // ادامه به گرفتن اطلاعات فقط اگر کاربر ESC رو فشار نداده
+    if (!esc_pressed && username[0] != 0) {
         while (1) {
             get_input_sign_up(win, 4, 2, "Enter Email:                ", email, 50);
-            if (email[0] == '\0') { // کاربر ESC رو فشار داد
+            if (email[0] == '\0') {
                 esc_pressed = 1;
                 break;
             }

@@ -1,0 +1,1 @@
+gcc main.c menu.c outro.c music.c sign_up.c login.c before_game_menu.c -o main.out -lncurses -lSDL2 -lSDL2_mixer && ./main.out

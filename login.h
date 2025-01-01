@@ -3,7 +3,6 @@
 
 #include <ncurses.h>
 
-// اعلام متغیر which_menu به عنوان خارجی
 extern char which_menu[50];
 
 void get_input_login(WINDOW *win, int y, int x, char *prompt, char *input, int length);

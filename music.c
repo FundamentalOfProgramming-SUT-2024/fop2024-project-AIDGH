@@ -12,9 +12,10 @@ void print_music_menu(WINDOW *music_win, int highlight, char **choices, int n_ch
     x = 2;
     y = 2;
     box(music_win, 0, 0);
+    mvwprintw(music_win, 0, (40 - strlen("[Music Menu]")) / 2, "[Music Menu]");
     for (i = 0; i < n_choices; ++i) {
         if (highlight == i + 1) {
-            wattron(music_win, A_BOLD | A_REVERSE); // Highlighted option
+            wattron(music_win, A_BOLD | A_REVERSE);
             mvwprintw(music_win, y, x, "%s", choices[i]);
             wattroff(music_win, A_BOLD | A_REVERSE);
         } else {
@@ -22,6 +23,13 @@ void print_music_menu(WINDOW *music_win, int highlight, char **choices, int n_ch
         }
         y++;
     }
+    y++;
+    wattron(music_win, COLOR_PAIR(1));
+    mvwprintw(music_win, y - 1, x, "      _____             ___");
+    mvwprintw(music_win, y, x, "      |    |      |    /   \\");
+    mvwprintw(music_win, y + 1, x - 1, "      _|   _|     _|   -|---|-");
+    mvwprintw(music_win, y + 2, x - 1, "     |_|  |_|    |_|    \\___/");
+    wattroff(music_win, COLOR_PAIR(1));
     wrefresh(music_win);
 }
 
@@ -38,7 +46,6 @@ char* display_music_menu() {
     char *choices[100];
     int n_choices = 0;
 
-    // Open the directory and read the music files
     if ((dir = opendir(music_dir)) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
             if (strstr(ent->d_name, ".mp3")) {
@@ -62,7 +69,7 @@ char* display_music_menu() {
     noecho();
     cbreak();
     int startx, starty, width, height;
-    height = n_choices + 4;
+    height = n_choices + 8;
     width = 40;
     starty = (LINES - height) / 2;
     startx = (COLS - width) / 2;

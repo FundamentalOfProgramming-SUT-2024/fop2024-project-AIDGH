@@ -9,6 +9,7 @@
 #include "music.h"
 #include "login.h"
 #include "sign_up.h"
+#include "before_game_menu.h"
 
 char which_menu[50] = "menu";
 
@@ -49,15 +50,11 @@ int main() {
             clear();
             refresh();
             login_screen(); // صدا زدن تابع ورود
-            // printf("menu is:\n");
-            // puts(which_menu);
-            // strcpy(which_menu, "Before game menu"); // تغییر وضعیت به "Before game menu"
+            strcpy(which_menu, "Before game menu"); // تغییر وضعیت به "Before game menu"
         } else if (!strcmp(which_menu, "Before game menu")) {
             clear();
             refresh();
-            // تابع مربوط به منوی قبل از بازی را اینجا صدا بزنید
-            // مثلا: before_game_menu();
-            // در نهایت وضعیت which_menu را به مقدار مناسب تغییر دهید
+            before_game_menu(); // صدا زدن تابع منوی قبل از بازی
             strcpy(which_menu, "menu");
         }
     }
