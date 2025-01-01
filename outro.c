@@ -27,6 +27,7 @@ void display_message() {
     wattroff(message_win, COLOR_PAIR(1) | A_BOLD);
 
     wattron(message_win, COLOR_PAIR(2));
+    box(stdscr, '|', '-');
     mvwprintw(message_win, 3, (width - strlen("Press any key to exit")) / 2, "Press any key to exit");
     wattroff(message_win, COLOR_PAIR(2));
 

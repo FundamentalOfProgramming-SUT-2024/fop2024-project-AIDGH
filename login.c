@@ -6,6 +6,7 @@
 #include <ncurses.h>
 
 extern char which_menu[50];
+extern char which_user[50];
 
 void get_input_login(WINDOW *win, int y, int x, char *prompt, char *input, int length) {
     char full_prompt[100];
@@ -143,7 +144,8 @@ void login_screen() {
                 if (highlight == 1) {
                     mvwprintw(win, 12, 2, "Continuing as guest.           ");
                     wrefresh(win);
-                    strcpy(which_menu, " New Game ");
+                    strcpy(which_menu, "Guest before game menu");
+                    strcpy(which_user, "guest");
                     goto end;
                 } else {
                     mvwprintw(win, 12, 2, "Entering login...              ");
@@ -193,6 +195,7 @@ login:
 
         mvwprintw(win, 12, 2, "Login successful!                ");
         wrefresh(win);
+        strcpy(which_user, "user");
         strcpy(which_menu, "Before game menu");
         break;
     }

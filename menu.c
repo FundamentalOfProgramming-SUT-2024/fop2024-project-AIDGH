@@ -2,6 +2,8 @@
 #include <string.h>
 #include "menu.h"
 #define COLOR_KAKA 5
+#define COLOR_GREEN1 30
+#define COLOR_YELLOW1 31
 // #define COLOR_RED 20
 void print_menu(WINDOW *menu_win, int highlight, char **choices, int n_choices) {
     int x, y, i;
@@ -40,7 +42,7 @@ char* display_menu() {
         " LOGIN ",
         " SIGN UP ",
         " SCOREBOARD ",
-        " MUSIC "
+        " SETTINGS "
     };
     int n_choices = sizeof(choices) / sizeof(char *);
 
@@ -49,12 +51,17 @@ char* display_menu() {
     init_color(COLOR_CYAN, 700, 1000, 1000);
     init_color(COLOR_KAKA, 1000, 600, 600);
     init_color(COLOR_RED, 1000, 0, 0);
+    init_color(COLOR_GREEN1, 0, 1000, 0);
+    init_color(COLOR_YELLOW1, 1000, 1000, 0);
     init_pair(1, COLOR_YELLOW, COLOR_BLACK);
     init_pair(2, COLOR_WHITE, COLOR_BLUE);
     init_pair(3, COLOR_CYAN, COLOR_BLACK);
     init_pair(4, COLOR_CYAN, COLOR_BLACK);
     init_pair(5, COLOR_KAKA, COLOR_BLACK);
     init_pair(6, COLOR_RED, COLOR_BLACK);
+    init_pair(7, COLOR_GREEN1, COLOR_BLACK);
+    init_pair(8, COLOR_YELLOW1, COLOR_BLACK);
+    init_pair(9, COLOR_BLUE, COLOR_BLACK);
     curs_set(0);
     clear();
     noecho();
@@ -65,6 +72,9 @@ char* display_menu() {
     starty = (LINES - height) / 2;
     startx = (COLS - width) / 2;
     int y_kaka = 15;
+    attron(COLOR_PAIR(4));
+    box(stdscr, '|', '-');
+    attroff(COLOR_PAIR(4));
     attron(COLOR_PAIR(6));
     mvprintw(LINES / 2 - 24 + y_kaka, (COLS - width) / 2 - 20, "          __     ");
     mvprintw(LINES / 2 - 23 + y_kaka, (COLS - width) / 2 - 20, "      |__|__     ");

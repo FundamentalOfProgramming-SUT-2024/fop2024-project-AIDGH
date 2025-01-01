@@ -10,9 +10,17 @@
 #include "login.h"
 #include "sign_up.h"
 #include "before_game_menu.h"
+#include "guest_before_game_menu.h"
+#include "map_generator.h"
+#include "settings.h"
+#include "color_change.h"
+#include "difficulty.h"
 
 char which_menu[50] = "menu";
-
+char which_user[50] = "guest";
+char which_color[50] = " Yellow ";
+char which_difficulty[50] = " Easy ";
+char* selected_music;
 int main() {
     initscr();
     start_color();
@@ -29,17 +37,14 @@ int main() {
             refresh();
             display_message();
             break;
-        } else if (!strcmp(which_menu, "menu")) {
+        } else if (!strcmp(which_menu, "menu") || !strcmp(which_menu, " Menu ")) {
             clear();
             refresh();
             strcpy(which_menu, display_menu());
-        } else if (!strcmp(which_menu, " MUSIC ")) {
+        } else if (!strcmp(which_menu, " MUSIC ") || !strcmp(which_menu, " Music ")) {
             clear();
             refresh();
-            char* selected_music = display_music_menu();
-            if (selected_music != NULL) {
-                play_music(selected_music);
-            }
+            selected_music = display_music_menu();
             strcpy(which_menu, "menu");
         } else if (!strcmp(which_menu, " SIGN UP ")) {
             clear();
@@ -50,12 +55,43 @@ int main() {
             clear();
             refresh();
             login_screen(); // صدا زدن تابع ورود
-            strcpy(which_menu, "Before game menu"); // تغییر وضعیت به "Before game menu"
         } else if (!strcmp(which_menu, "Before game menu")) {
             clear();
             refresh();
             before_game_menu(); // صدا زدن تابع منوی قبل از بازی
-            strcpy(which_menu, "menu");
+        } else if (!strcmp(which_menu, "Guest before game menu")) {
+            clear();
+            refresh();
+            guest_before_game_menu(); // صدا زدن تابع منوی قبل از بازی
+        }
+        else if (!strcmp(which_menu, " New Game ")) {
+            if (selected_music != NULL) {
+                play_music(selected_music);
+            }
+            clear(); 
+            refresh(); 
+            generate_map();
+            getch();
+            if(!strcmp(which_user, "guest")){
+                strcpy(which_menu, "Guest before game menu");
+            }
+            else{
+                strcpy(which_menu, "Before game menu");
+            }
+        } else if (!strcmp(which_menu, " Settings ") || !strcmp(which_menu, " SETTINGS ")) {
+            clear();
+            refresh();
+            setting_menu();
+        } else if (!strcmp(which_menu, " Color Change ")) {
+            clear();
+            refresh();
+            color_change();
+            strcpy(which_menu, " Settings ");
+        } else if (!strcmp(which_menu, " Difficulty ")) {
+            clear();
+            refresh();
+            difficulty_change();
+            strcpy(which_menu, " Settings ");
         }
     }
 

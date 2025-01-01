@@ -29,6 +29,7 @@ void print_music_menu(WINDOW *music_win, int highlight, char **choices, int n_ch
     mvwprintw(music_win, y, x, "      |    |      |    /   \\");
     mvwprintw(music_win, y + 1, x - 1, "      _|   _|     _|   -|---|-");
     mvwprintw(music_win, y + 2, x - 1, "     |_|  |_|    |_|    \\___/");
+    box(stdscr, '|', '-');
     wattroff(music_win, COLOR_PAIR(1));
     wrefresh(music_win);
 }
@@ -73,10 +74,12 @@ char* display_music_menu() {
     width = 40;
     starty = (LINES - height) / 2;
     startx = (COLS - width) / 2;
-
+    attron(COLOR_PAIR(1));
+    box(stdscr, '|', '-');
+    attroff(COLOR_PAIR(1));
     music_win = newwin(height, width, starty, startx);
     keypad(music_win, TRUE);
-    mvprintw(0, 0, "Use arrow keys to go up and down, press enter to select a music file");
+    mvprintw(LINES / 2 - 20, COLS / 2 - 33, "Use arrow keys to go up and down, press enter to select a music file");
     refresh();
     print_music_menu(music_win, highlight, choices, n_choices);
     while (1) {

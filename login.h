@@ -4,6 +4,7 @@
 #include <ncurses.h>
 
 extern char which_menu[50];
+extern char which_user[50];
 
 void get_input_login(WINDOW *win, int y, int x, char *prompt, char *input, int length);
 int username_exists_login(const char *username);
