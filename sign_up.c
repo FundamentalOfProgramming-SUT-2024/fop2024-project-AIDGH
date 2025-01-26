@@ -1,10 +1,17 @@
 #include "sign_up.h"
+#include "user.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
 #include <ncurses.h>
 #include <time.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+extern char our_user[50];
+extern char which_user[50];
+extern User current_user;
 
 void get_input_sign_up(WINDOW *win, int y, int x, char *prompt, char *input, int length) {
     char full_prompt[100];
@@ -47,6 +54,40 @@ int username_exists_sign_up(const char *username) {
     }
     fclose(file);
     return 0;
+}
+
+void user_save_data() {
+
+    char filepath[100] = "users/";
+
+    strcat(filepath, our_user);
+    strcat(filepath, ".txt");
+
+    mkdir("users", 0777);
+
+    FILE *file = fopen(filepath, "w");
+    if (file == NULL) {
+        mvprintw(1, 0, "Error creating user file.");
+        getch();
+        return;
+    }
+
+    fprintf(file, "points: 0\n");
+    fprintf(file, "games count: 0\n");
+    fprintf(file, "play time: 0\n");
+    fprintf(file, "golds: 0\n");
+    fprintf(file, "food: 0\n");
+    fprintf(file, "weapons: 0 \n");
+    fprintf(file, "spells: 0 \n");
+    fprintf(file, "ancientkey: 0 \n");
+    fprintf(file, "broken ancientkey: 0 \n");
+    fprintf(file, "level: 1\n");
+    fprintf(file, "map: \n");
+
+    fclose(file);
+
+    // mvprintw(1, 0, "User '%s' created successfully.", our_user);
+    // getch();
 }
 
 void save_user_info(const char *username, const char *email, const char *password) {
@@ -115,6 +156,9 @@ void user_input_screen() {
         if (username_exists_sign_up(username)) {
             mvwprintw(win, 14, 2, "Username already exists. Try another.");
         } else {
+            strcpy(our_user, username);
+            strcpy(which_user, "user");
+            strcpy(current_user.username, username);
             break;
         }
         wrefresh(win);
@@ -129,6 +173,7 @@ void user_input_screen() {
                 break;
             }
             if (validate_email(email)) {
+                strcpy(current_user.email, email);
                 break;
             } else {
                 mvwprintw(win, 14, 2, "Invalid email format. Try again.");
@@ -149,7 +194,7 @@ void user_input_screen() {
                     if (i == highlight) {
                         wattron(win, A_REVERSE);
                     }
-                    mvwprintw(win, 6 + i * 2, 2, "%s", choices[i]); // استفاده از فرمت رشته ثابت
+                    mvwprintw(win, 6 + i * 2, 2, "%s", choices[i]);
                     wattroff(win, A_REVERSE);
                 }
                 int choice = wgetch(win);
@@ -164,12 +209,12 @@ void user_input_screen() {
                             highlight++;
                         }
                         break;
-                    case 10: // Enter key
+                    case 10:
                         if (highlight == 0) {
-                            wmove(win, 6 + highlight * 2, 2 + strlen(choices[0]) + 1); // جابجایی نشانگر به محل مناسب
+                            wmove(win, 6 + highlight * 2, 2 + strlen(choices[0]) + 1);
                             wrefresh(win);
-                            get_input_sign_up(win, 8, 2, "Password:                ", password, 50); // تغییر مکان ورودی رمز عبور
-                            if (password[0] == '\0') { // کاربر ESC رو فشار داد
+                            get_input_sign_up(win, 8, 2, "Password:                ", password, 50);
+                            if (password[0] == '\0') {
                                 esc_pressed = 1;
                                 break;
                             }
@@ -180,21 +225,22 @@ void user_input_screen() {
                                 mvwprintw(win, 14, 2, "Password must be 8+ chars, 1 digit, 1 upper, 1 lower.");
                             }
                         } else if (highlight == 1) {
-                            generate_random_password(password, 12); // تولید رمز عبور تصادفی
-                            mvwprintw(win, 10, 2, "Generated Password: %s", password); // اصلاح مکان نمایش پیام
+                            generate_random_password(password, 12);
+                            mvwprintw(win, 10, 2, "Generated Password: %s", password);
                             break;
                         }
                         wrefresh(win);
                         break;
                 }
-                if (password[0] != '\0' && validate_password(password)) {
+                if (password[0] != '\0' && validate_password(password)) {  
+                    strcpy(current_user.password, password);
                     break;
                 }
             }
         }
 
         if (!esc_pressed) {
-            // ذخیره کردن اطلاعات در فایل
+            user_save_data();
             save_user_info(username, email, password);
             mvwprintw(win, 12, 2, "Information saved successfully!");
         }

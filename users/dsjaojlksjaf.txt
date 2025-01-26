@@ -1,0 +1,9 @@
+points: 0
+games count: 0
+play time: 0
+golds: 0
+food: 0
+weapons: 0[]
+spells: 0[]
+level: 1
+map: 

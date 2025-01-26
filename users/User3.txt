@@ -1,0 +1,9 @@
+points: 51
+games count: 0
+play time: 0
+golds: 0
+food: 0
+weapons: []
+spells: []
+level: 1
+map: 

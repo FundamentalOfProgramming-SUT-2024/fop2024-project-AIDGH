@@ -4,6 +4,10 @@
 #define COLOR_KAKA 5
 #define COLOR_GREEN1 30
 #define COLOR_YELLOW1 31
+#define COLOR_SILVER1 32
+#define COLOR_BRONZE1 33
+#define COLOR_GOLD1 34
+#define COLOR_ORANGE1 35
 // #define COLOR_RED 20
 void print_menu(WINDOW *menu_win, int highlight, char **choices, int n_choices) {
     int x, y, i;
@@ -39,6 +43,7 @@ char* display_menu() {
     static char result[50];
 
     char *choices[] = {
+        " GAME MENU ",
         " LOGIN ",
         " SIGN UP ",
         " SCOREBOARD ",
@@ -53,6 +58,10 @@ char* display_menu() {
     init_color(COLOR_RED, 1000, 0, 0);
     init_color(COLOR_GREEN1, 0, 1000, 0);
     init_color(COLOR_YELLOW1, 1000, 1000, 0);
+    init_color(COLOR_SILVER1, 753, 753, 753);
+    init_color(COLOR_BRONZE1, 801, 496, 195);
+    init_color(COLOR_GOLD1, 1000, 840, 0);
+    init_color(COLOR_ORANGE1, 1000, 647, 0);
     init_pair(1, COLOR_YELLOW, COLOR_BLACK);
     init_pair(2, COLOR_WHITE, COLOR_BLUE);
     init_pair(3, COLOR_CYAN, COLOR_BLACK);
@@ -62,12 +71,17 @@ char* display_menu() {
     init_pair(7, COLOR_GREEN1, COLOR_BLACK);
     init_pair(8, COLOR_YELLOW1, COLOR_BLACK);
     init_pair(9, COLOR_BLUE, COLOR_BLACK);
+    init_pair(10, COLOR_SILVER1, COLOR_BLACK);
+    init_pair(11, COLOR_BRONZE1, COLOR_BLACK);
+    init_pair(12, COLOR_GOLD1, COLOR_BLACK);
+    init_pair(13, COLOR_WHITE, COLOR_BLACK);
+    init_pair(14, COLOR_ORANGE1, COLOR_BLACK);
     curs_set(0);
     clear();
     noecho();
     cbreak();
     int startx, starty, width, height;
-    height = 12;
+    height = 13;
     width = 45;
     starty = (LINES - height) / 2;
     startx = (COLS - width) / 2;
@@ -113,8 +127,8 @@ char* display_menu() {
     mvprintw(LINES / 2 - 21, (COLS - width) / 2 + 6, "_____________________________");
     mvprintw(LINES / 2 - 20, (COLS - width) / 2 + 6, "|                           |");
     mvprintw(LINES / 2 - 19, (COLS - width) / 2 + 6, "|  Welcome to AID Rouge =)  |");
-    mvprintw(LINES / 2 - 18, (COLS - width) / 2 + 6, "|                           |");
-    mvprintw(LINES / 2 - 17, (COLS - width) / 2 - 14, "____________________|                           |______________________");
+    mvprintw(LINES / 2 - 18, (COLS - width) / 2 + 6, "|🗿  🗿  🗿   🗿  🗿  🗿  🗿|");
+    mvprintw(LINES / 2 - 17, (COLS - width) / 2 - 14, "____________________|  🗿  🗿  🗿   🗿  🗿  🗿  |______________________");
     mvprintw(LINES / 2 - 16, (COLS - width) / 2 - 14, "|_____________________________________________________________________|");
     mvprintw(LINES / 2 - 15, (COLS - width) / 2 - 14, "|                                                                     |");
     mvprintw(LINES / 2 - 14, (COLS - width) / 2 - 14, "|  Use arrow keys to go up and down, press enter to select a choice!  |");

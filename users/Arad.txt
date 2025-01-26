@@ -1,0 +1,9 @@
+points: 999
+games count: 0
+play time: 100
+golds: 50
+food: 0
+weapons: 
+spells: 
+level: 1
+map: 

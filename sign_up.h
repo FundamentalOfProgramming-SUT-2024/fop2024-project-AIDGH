@@ -3,6 +3,8 @@
 
 #include <ncurses.h>
 
+extern char our_user[50];
+
 void get_input_sign_up(WINDOW *win, int y, int x, char *prompt, char *input, int length);
 int username_exists_sign_up(const char *username);
 void save_user_info(const char *username, const char *email, const char *password);

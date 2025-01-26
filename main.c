@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <locale.h>
 #include <time.h>
 #include <string.h>
 #include "menu.h"
@@ -15,13 +16,30 @@
 #include "settings.h"
 #include "color_change.h"
 #include "difficulty.h"
+#include "user.h"
+#include "scoreboard.h"
+#include "profile.h"
+#include "game.h"
 
+User current_user;
+char our_user[50] = "guest";
 char which_menu[50] = "menu";
 char which_user[50] = "guest";
-char which_color[50] = " Yellow ";
+char which_color[50] = " White ";
 char which_difficulty[50] = " Easy ";
+int current_level;
+int unlocked_level;
+int new_game_check;
+extern int escape_check;
 char* selected_music;
+
 int main() {
+    int current_level = 0;
+    int unlocked_level_level = -1;
+    new_game_check = 1;
+    escape_check = 0;
+    srand(time(NULL));
+    setlocale(LC_ALL, "");
     initscr();
     start_color();
     init_pair(1, COLOR_YELLOW, COLOR_BLACK);
@@ -30,14 +48,13 @@ int main() {
     curs_set(0);
     noecho();
     cbreak();
-
     while (1) {
         if (!strcmp(which_menu, "exit")) {
             clear();
             refresh();
             display_message();
             break;
-        } else if (!strcmp(which_menu, "menu") || !strcmp(which_menu, " Menu ")) {
+        } else if (!strcmp(which_menu, "menu") || !strcmp(which_menu, " Menu ") || !strcmp(which_menu, " Main menu ")) {
             clear();
             refresh();
             strcpy(which_menu, display_menu());
@@ -45,39 +62,28 @@ int main() {
             clear();
             refresh();
             selected_music = display_music_menu();
-            strcpy(which_menu, "menu");
+            strcpy(which_menu, " Settings ");
         } else if (!strcmp(which_menu, " SIGN UP ")) {
             clear();
             refresh();
-            user_input_screen(); // صدا زدن تابع ثبت نام
+            user_input_screen();
             strcpy(which_menu, "menu");
-        } else if (!strcmp(which_menu, " LOGIN ")) { // اضافه کردن حالت ورود
+        } else if (!strcmp(which_menu, " LOGIN ")) {
             clear();
             refresh();
-            login_screen(); // صدا زدن تابع ورود
-        } else if (!strcmp(which_menu, "Before game menu")) {
+            login_screen();
+        } else if (!strcmp(which_menu, "Before game menu") || !strcmp(which_menu, " Before game menu ") || !strcmp(which_menu, " GAME MENU ")) {
+            if(!strcmp(which_user, "guest")){
+                strcpy(which_menu, "Guest before game menu");
+                continue;
+            }
             clear();
             refresh();
-            before_game_menu(); // صدا زدن تابع منوی قبل از بازی
+            before_game_menu();
         } else if (!strcmp(which_menu, "Guest before game menu")) {
             clear();
             refresh();
-            guest_before_game_menu(); // صدا زدن تابع منوی قبل از بازی
-        }
-        else if (!strcmp(which_menu, " New Game ")) {
-            if (selected_music != NULL) {
-                play_music(selected_music);
-            }
-            clear(); 
-            refresh(); 
-            generate_map();
-            getch();
-            if(!strcmp(which_user, "guest")){
-                strcpy(which_menu, "Guest before game menu");
-            }
-            else{
-                strcpy(which_menu, "Before game menu");
-            }
+            guest_before_game_menu();
         } else if (!strcmp(which_menu, " Settings ") || !strcmp(which_menu, " SETTINGS ")) {
             clear();
             refresh();
@@ -92,9 +98,49 @@ int main() {
             refresh();
             difficulty_change();
             strcpy(which_menu, " Settings ");
+        } else if (!strcmp(which_menu, " SCOREBOARD ")) {
+            clear();
+            refresh();
+            display_scoreboard();
+            strcpy(which_menu, "menu");
+        } else if (!strcmp(which_menu, " Scoreboard ")) {
+            clear();
+            refresh();
+            display_scoreboard();
+            strcpy(which_menu, " Settings ");
+        } else if (!strcmp(which_menu, " Profile ")) {
+            clear();
+            refresh();
+            display_profile();
+            strcpy(which_menu, "Before game menu");
+        }else if (!strcmp(which_menu, " New Game ")) {
+            new_game_check = 1;
+            if (selected_music != NULL) {
+                play_music(selected_music);
+            } else {
+                printw("No music selected.");
+                refresh();
+            }
+            current_level = 0;
+            unlocked_level = -1;
+            while(!escape_check){
+                clear(); 
+                refresh(); 
+                if(current_level > unlocked_level){
+                    generate_map();
+                }
+                getch();
+                game_play();
+            }
+            escape_check = 0;
+            if(!strcmp(which_user, "guest")){
+                strcpy(which_menu, "Guest before game menu");
+            }
+            else{
+                strcpy(which_menu, "Before game menu");
+            }
         }
     }
-
     endwin();
     return 0;
 }

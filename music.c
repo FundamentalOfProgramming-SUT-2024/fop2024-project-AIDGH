@@ -49,7 +49,7 @@ char* display_music_menu() {
 
     if ((dir = opendir(music_dir)) != NULL) {
         while ((ent = readdir(dir)) != NULL) {
-            if (strstr(ent->d_name, ".mp3")) {
+            if (strstr(ent->d_name, ".mp3") || strstr(ent->d_name, ".flac")) {
                 choices[n_choices] = strdup(ent->d_name);
                 n_choices++;
             }
@@ -76,10 +76,11 @@ char* display_music_menu() {
     startx = (COLS - width) / 2;
     attron(COLOR_PAIR(1));
     box(stdscr, '|', '-');
+    // mvprintw(27, 110, "Press Again");
     attroff(COLOR_PAIR(1));
     music_win = newwin(height, width, starty, startx);
     keypad(music_win, TRUE);
-    mvprintw(LINES / 2 - 20, COLS / 2 - 33, "Use arrow keys to go up and down, press enter to select a music file");
+    mvprintw(LINES / 2 - n_choices / 2 - 7, COLS / 2 - 33, "Use arrow keys to go up and down, press enter to select a music file");
     refresh();
     print_music_menu(music_win, highlight, choices, n_choices);
     while (1) {

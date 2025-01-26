@@ -4,6 +4,7 @@
 
 extern char which_menu[50];
 extern char which_difficulty[50];
+extern int difficulty_efficiency;
 
 char *difficulty_choices[] = {
     " Easy ",
@@ -63,6 +64,7 @@ void difficulty_change() {
     startx = (COLS - width) / 2;
     attron(COLOR_PAIR(1));
     box(stdscr, '|', '-');
+    mvprintw(27, 110, "Press Again");
     attroff(COLOR_PAIR(1));
     menu_win = newwin(height, width, starty, startx);
     keypad(menu_win, TRUE);
@@ -95,8 +97,20 @@ void difficulty_change() {
     }
 
     strcpy(which_difficulty, difficulty_choices[choice - 1]);
+    if(!strcmp(which_difficulty, " Easy ")){
+        difficulty_efficiency = 1;
+    }
+    else if(!strcmp(which_difficulty, " Normal ")){
+        difficulty_efficiency = 2;
+    }
+    else if(!strcmp(which_difficulty, " Hard ")){
+        difficulty_efficiency = 3;
+    }
+    else if(!strcmp(which_difficulty, " Extreme ")){
+        difficulty_efficiency = 4;
+    }
     clrtoeol();
     refresh();
-    getch();
+    // getch();
     delwin(menu_win);
 }

@@ -6,6 +6,7 @@ extern char which_menu[50];
 extern char which_color[50];
 
 char *color_choices[] = {
+    " White ",
     " Yellow ",
     " Red ",
     " Blue ",
@@ -47,40 +48,46 @@ void print_colors(WINDOW *menu_win, int highlight) {
     wattron(menu_win, A_BOLD | COLOR_PAIR(3));
     mvwprintw(menu_win, 12, x - 2, "|");
     wattroff(menu_win, A_BOLD | COLOR_PAIR(3));
+    wattron(menu_win, A_BOLD | COLOR_PAIR(3));
+    mvwprintw(menu_win, 14, x - 2, "|");
+    wattroff(menu_win, A_BOLD | COLOR_PAIR(3));
     wattron(menu_win, A_BOLD | COLOR_PAIR(7));
-    mvwprintw(menu_win, 12, 4, "         __   __   __   __   __ ");
+    mvwprintw(menu_win, 14, 4, "         __   __   __   __   __ ");
     wattroff(menu_win, A_BOLD | COLOR_PAIR(7));
     wattron(menu_win, A_BOLD | COLOR_PAIR(9));
-    mvwprintw(menu_win, 13, 2, " |________|--| |--| |--| |--| |--| ");
+    mvwprintw(menu_win, 15, 2, " |________|--| |--| |--| |--| |--| ");
     wattroff(menu_win, A_BOLD | COLOR_PAIR(9));
     wattron(menu_win, A_BOLD | COLOR_PAIR(6));
-    mvwprintw(menu_win, 14, 2, "          |--| |--| |--| |--| |--| ");
+    mvwprintw(menu_win, 16, 2, "          |--| |--| |--| |--| |--| ");
     wattroff(menu_win, A_BOLD | COLOR_PAIR(6));
     wattron(menu_win, A_BOLD | COLOR_PAIR(8));
-    mvwprintw(menu_win, 15, 2, "          \\_/  \\_/  \\_/  \\_/  \\_/");
+    mvwprintw(menu_win, 17, 2, "          \\_/  \\_/  \\_/  \\_/  \\_/");
     wattroff(menu_win, A_BOLD | COLOR_PAIR(8));
     
     for (i = 0; i < n_color_choices; ++i) {
         if (highlight == i + 1) {
-            if(i == 0){
+            if(i == 1){
                 wattron(menu_win, A_BOLD | COLOR_PAIR(8));
                 mvwprintw(menu_win, y, x - 2, "* %s", color_choices[i]);
                 wattroff(menu_win, A_BOLD | COLOR_PAIR(8));
             }
-            else if(i == 1){
+            else if(i == 2){
                 wattron(menu_win, A_BOLD | COLOR_PAIR(6));
                 mvwprintw(menu_win, y, x - 2, "* %s", color_choices[i]);
                 wattroff(menu_win, A_BOLD | COLOR_PAIR(6));
             }
-            else if(i == 2){
+            else if(i == 3){
                 wattron(menu_win, A_BOLD | COLOR_PAIR(9));
                 mvwprintw(menu_win, y, x - 2, "* %s", color_choices[i]);
                 wattroff(menu_win, A_BOLD | COLOR_PAIR(9));
             }
-            else if(i == 3){
+            else if(i == 4){
                 wattron(menu_win, A_BOLD | COLOR_PAIR(7));
                 mvwprintw(menu_win, y, x - 2, "* %s", color_choices[i]);
                 wattroff(menu_win, A_BOLD | COLOR_PAIR(7));
+            }
+            else if(i == 0){
+                mvwprintw(menu_win, y, x - 2, "* %s", color_choices[i]);
             }
         } else {
             wattron(menu_win, A_BOLD | COLOR_PAIR(3));
@@ -101,12 +108,13 @@ void color_change() {
     start_color();
 
     int startx, starty, width, height;
-    height = 18;
+    height = 20;
     width = 50;
     starty = (LINES - height) / 2;
     startx = (COLS - width) / 2;
     attron(COLOR_PAIR(1));
     box(stdscr, '|', '-');
+    mvprintw(29, 110, "Press Again");
     attroff(COLOR_PAIR(1));
     menu_win = newwin(height, width, starty, startx);
     keypad(menu_win, TRUE);
@@ -141,6 +149,6 @@ void color_change() {
     strcpy(which_color, color_choices[choice - 1]);
     clrtoeol();
     refresh();
-    getch();
+    // getch();
     delwin(menu_win);
 }

@@ -4,21 +4,54 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <time.h>
+#include "game.h"
 
-#define ROOM_MIN_SIZE 10
-#define ROOM_MAX_SIZE 20
-#define ROOM_PADDING 2  // فاصله بین مستطیل‌ها
-#define BORDER_PADDING 2 // فاصله بین اتاق‌ها و دیوارهای صفحه
+#define ROOM_MIN_SIZE 6
+#define ROOM_MAX_SIZE 16
+#define ROOM_PADDING 1
+#define BORDER_PADDING 2
 
-typedef struct {
-    int x, y, width, height;
-    int door_x, door_y; // موقعیت دروازه اتاق
-} Room;
+// typedef struct
+// {
+//     int x;
+//     int y;
+// } Point;
 
-void draw_room(Room room);
-void draw_doors(Room *room);
-void draw_objects(Room room);
-int intersects(Room *rooms, int num_rooms, Room room);
+// typedef struct
+// {
+//     int x, y;
+//     int height;
+//     int width;
+//     // Door *doors;
+//     int doorCount;
+//     Point window;
+//     Point *pillar;
+//     bool isVisible;
+//     int index;
+//     // Food *foods;
+//     // Gold *golds;
+//     // Gun *guns;
+//     // Enchant *enchants;
+//     // Trap *traps;
+//     // Stair stair;
+//     int keyCount;
+//     int foodCount;
+//     int goldCount;
+//     int gunCount;
+//     int enchantCount;
+//     int trapCount;
+//     char type;
+//     int stairCount;
+// } Room;
+
+void create_room(Room *room);
+void draw_windows(Room *room);
+void create_pillars(Room *room);
+void draw_traps(Room *room);
+void draw_stair(Room *room);
+void draw_player(Room *room);
+void connect_random_rooms(Room *rooms, int num_rooms, int room_checker[1000][2], int *t);
+int intersects(Room *rooms, int num_rooms, Room room, int total_rooms);
 int is_valid_move(int x, int y, Room *rooms, int num_rooms);
 void connect_rooms(Room room1, Room room2, Room *rooms, int num_rooms);
 void generate_map();

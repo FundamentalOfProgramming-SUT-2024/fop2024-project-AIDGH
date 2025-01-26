@@ -96,6 +96,6 @@ void guest_before_game_menu() {
     strcpy(which_menu, guest_choices_before_game[choice - 1]);
     clrtoeol();
     refresh();
-    getch();
+    // getch();
     delwin(menu_win);
 }

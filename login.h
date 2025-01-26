@@ -3,6 +3,7 @@
 
 #include <ncurses.h>
 
+extern char our_user[50];
 extern char which_menu[50];
 extern char which_user[50];
 

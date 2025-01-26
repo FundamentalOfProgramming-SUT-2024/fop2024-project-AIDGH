@@ -1,8 +1,10 @@
 #include <ncurses.h>
 #include <string.h>
+#include "user.h"
 #include "before_game_menu.h"
 
 extern char which_menu[50];
+extern User current_user;
 
 char *choices_before_game[] = {
     " New Game ",
@@ -25,7 +27,7 @@ void print_menu_before_game(WINDOW *menu_win, int highlight) {
     mvwprintw(menu_win, 2, 2, " _________|__| |__| |__| |__| |__| ");
     mvwprintw(menu_win, 3, 2, " |        |__| |__| |__| |__| |__| ");
     wattron(menu_win, A_BOLD | COLOR_PAIR(6));
-    mvwprintw(menu_win, 14, 2, " |                                  ");
+    mvwprintw(menu_win, 14, 2, " |                                ");
     mvwprintw(menu_win, 4, x - 2, "|");
     mvwprintw(menu_win, 6, x - 2, "|");
     mvwprintw(menu_win, 8, x - 2, "|");
@@ -100,6 +102,6 @@ void before_game_menu() {
     strcpy(which_menu, choices_before_game[choice - 1]);
     clrtoeol();
     refresh();
-    getch();
+    // getch();
     delwin(menu_win);
 }
