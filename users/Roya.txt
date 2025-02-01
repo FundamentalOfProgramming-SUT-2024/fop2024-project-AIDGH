@@ -1,0 +1,12 @@
+health: -10
+points: 1375
+games count: 0
+play time: 177
+golds: 49
+food: 85
+weapons: 3 Mace0, ¾¾¾¾¾¾¾dDagger-1094795586, 1633117033, ¾¾¾-1094795586, row-1094795586
+spells: -307413501 Speed0, Power1, Healing2
+ancientkey: 1
+broken ancientkey: 0
+level: 1
+map: 

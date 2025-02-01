@@ -1,8 +1,8 @@
 health: 100
-points: 100
-games count: 5
+points: -1
+games count: 0
 play time: 0
-golds: 500
+golds: 0
 food: 100
 weapons: 0 
 spells: 0 

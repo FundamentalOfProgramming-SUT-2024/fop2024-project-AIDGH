@@ -22,21 +22,24 @@
 #include "game.h"
 
 User current_user;
+extern Game *game;
 char our_user[50] = "guest";
 char which_menu[50] = "menu";
 char which_user[50] = "guest";
 char which_color[50] = " White ";
 char which_difficulty[50] = " Easy ";
-int current_level;
-int unlocked_level;
+extern int current_level;
+extern int unlocked_level;
 int new_game_check;
 extern int escape_check;
+extern int difficulty_efficiency;
 char* selected_music;
 
 int main() {
     int current_level = 0;
     int unlocked_level_level = -1;
     new_game_check = 1;
+    difficulty_efficiency = 1;
     escape_check = 0;
     srand(time(NULL));
     setlocale(LC_ALL, "");
@@ -107,7 +110,7 @@ int main() {
             clear();
             refresh();
             display_scoreboard();
-            strcpy(which_menu, " Settings ");
+            strcpy(which_menu, " Before game menu ");
         } else if (!strcmp(which_menu, " Profile ")) {
             clear();
             refresh();
@@ -117,22 +120,28 @@ int main() {
             new_game_check = 1;
             if (selected_music != NULL) {
                 play_music(selected_music);
-            } else {
+            }
+            else {
                 printw("No music selected.");
                 refresh();
             }
             current_level = 0;
             unlocked_level = -1;
-            while(!escape_check){
-                clear(); 
-                refresh(); 
-                if(current_level > unlocked_level){
-                    generate_map();
-                }
-                getch();
-                game_play();
-            }
+            game_play();
+            // while(!escape_check){
+            //     clear(); 
+            //     refresh(); 
+            //     if(current_level > unlocked_level){
+            //         generate_map();
+            //     }
+            //     getch();
+            //     game_play();
+            // }
             escape_check = 0;
+            if(strcmp(which_user, "guest")){
+                save_user_game(game->player);
+                load_user_info(game->player->name, &current_user);
+            }
             if(!strcmp(which_user, "guest")){
                 strcpy(which_menu, "Guest before game menu");
             }

@@ -5,6 +5,8 @@
 #define MAX_SPELLS 10
 #define MAX_NAME_LENGTH 50
 
+#include "game.h"
+
 typedef struct {
     char username[50];
     char email[50];
@@ -14,9 +16,12 @@ typedef struct {
     int play_time;
     int golds;
     int food;
+    int health;
     char weapons[MAX_WEAPONS][MAX_NAME_LENGTH];
     int weaponsCount;
     int spellsCount;
+    int spellsCount_each[3];
+    int weaponsCount_each[5];
     int ancientkey;
     int brokenancientkey;
     char spells[MAX_SPELLS][MAX_NAME_LENGTH];
@@ -25,6 +30,7 @@ typedef struct {
 } User;
 
 int load_user_info(const char *username, User *user);
+int save_user_game(Player *user);
 int read_all_users(User *users, int max_users);
 
 #endif // USER_H

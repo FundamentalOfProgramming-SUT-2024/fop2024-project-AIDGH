@@ -1,0 +1,12 @@
+health: 100
+points: 13030
+games count: 2
+play time: 80
+golds: 1263
+food: 145
+weapons: 18 Mace3, Dagger3, MagicWand7, NormalArrow1, Sword12
+spells: 22 Speed14, Power6, Healing9
+ancientkey: 5
+broken ancientkey: 100
+level: 0
+map: 

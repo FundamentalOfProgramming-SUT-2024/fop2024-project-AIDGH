@@ -1029,8 +1029,8 @@ void generate_map() {
         room.isVisible = false;
         is_stair = 1;
         create_room(&room);
-        rooms[total_rooms - 1] = room;
-        rooms[total_rooms - 1].index = total_rooms - 1;
+        game->levels[game->currentLevel]->rooms[total_rooms - 1] = &room;
+        game->levels[game->currentLevel]->rooms[total_rooms - 1]->index = total_rooms - 1;
         
         while (num_rooms < total_rooms - 1) {
             Room room;
@@ -1044,13 +1044,13 @@ void generate_map() {
                 room.x = start_x + rand() % (25 - room.width - start_x);
                 room.y = start_y + rand() % (25 - room.height - start_y);
                 room.isVisible = false;
-                if(current_level == 0){
+                if(game->currentLevel == 0){
                     is_stair = 0;
                 }
                 create_room(&room);
                 is_stair = 0;
                 room.index = 0;
-                rooms[num_rooms++] = room;
+                game->levels[game->currentLevel]->rooms[num_rooms++] = &room;
             }
             counter++;
             if(counter >= 10000){
@@ -1061,68 +1061,68 @@ void generate_map() {
                 room.x = start_x + 5 + rand() % (end_x - room.width - start_x);
                 room.y = start_y + 5 + rand() % (end_y - room.height - start_y - 5);
                 inter = 4;
-                if (!intersects(rooms, num_rooms, room, total_rooms)) {
+                if (!intersects(*game->levels[game->currentLevel]->rooms, num_rooms, room, total_rooms)) {
                     counter = 0;
                     inter = 0;
                     create_room(&room);
                     room.index = num_rooms;
                     room.isVisible = false;
-                    rooms[num_rooms++] = room;
+                    game->levels[game->currentLevel]->rooms[num_rooms++] = &room;
                 }
             }
-            else if (!intersects(rooms, num_rooms, room, total_rooms)) {
+            else if (!intersects(*game->levels[game->currentLevel]->rooms, num_rooms, room, total_rooms)) {
                 counter = 0;
                 inter = 0;
                 create_room(&room);
                 room.index = num_rooms;
                 room.isVisible = false;
-                rooms[num_rooms++] = room;
+                game->levels[game->currentLevel]->rooms[num_rooms++] = &room;
             }
         }
         num_rooms++;
 
         int k = 0;
         while(k < total_rooms * total_rooms * 2 || check_rooms_validate(room_checker, t, num_rooms)){
-            connect_random_rooms(rooms, num_rooms, room_checker, &t);
+            connect_random_rooms(*game->levels[game->currentLevel]->rooms, num_rooms, room_checker, &t);
             k++;
         }
 
-        draw_stair_1(&rooms[num_rooms - 1]);
+        draw_stair_1(game->levels[game->currentLevel]->rooms[num_rooms - 1]);
         if(game->currentLevel > 0){
-            draw_stair_2(&rooms[0]);
+            draw_stair_2(game->levels[game->currentLevel]->rooms[0]);
         }
-        draw_ancient_key(&rooms[rand() % total_rooms]);
+        draw_ancient_key(game->levels[game->currentLevel]->rooms[rand() % total_rooms]);
         for (int i = 0; i < num_rooms; i++) {
             is_nightmare = 0;
             is_spell = 0;
-            if(rooms[i].type == 'p'){
+            if(game->levels[game->currentLevel]->rooms[i]->type == 'p'){
                 is_spell = 1;
             }
-            else if(rooms[i].type == 'm'){
+            else if(game->levels[game->currentLevel]->rooms[i]->type == 'm'){
                 is_nightmare = 1;
             }
-            create_pillars(&rooms[i]);
-            create_food(&rooms[i]);
-            create_gold(&rooms[i]);
-            create_spell(&rooms[i]);
-            draw_traps(&rooms[i]);
-            create_weapon(&rooms[i]);
-            create_special_food(&rooms[i]);
+            create_pillars(game->levels[game->currentLevel]->rooms[i]);
+            create_food(game->levels[game->currentLevel]->rooms[i]);
+            create_gold(game->levels[game->currentLevel]->rooms[i]);
+            create_spell(game->levels[game->currentLevel]->rooms[i]);
+            draw_traps(game->levels[game->currentLevel]->rooms[i]);
+            create_weapon(game->levels[game->currentLevel]->rooms[i]);
+            create_special_food(game->levels[game->currentLevel]->rooms[i]);
             if(is_spell == 0 && is_nightmare == 0){
-                draw_enemies(&rooms[i]);
+                draw_enemies(game->levels[game->currentLevel]->rooms[i]);
             }
             else{
-                rooms[i].enemyCount = 0;
+                game->levels[game->currentLevel]->rooms[i]->enemyCount = 0;
             }
-            draw_windows(rooms + i);
+            draw_windows(game->levels[game->currentLevel]->rooms[i]);
         }
-        draw_player(&rooms[0]);
+        draw_player(game->levels[game->currentLevel]->rooms[0]);
         for (int i = 0; i < num_rooms; i++) {
-            correct_room(&rooms[i]);
+            correct_room(game->levels[game->currentLevel]->rooms[i]);
         }
         for (int i = 0; i < num_rooms; i++) {
             if(rand() % 3 == 0){
-                create_lock_key(&rooms[i]);
+                create_lock_key(game->levels[game->currentLevel]->rooms[i]);
             }
         }
         if(is_secret_room){
@@ -1131,22 +1131,22 @@ void generate_map() {
             room.index = total_rooms - 1;
             room.width = 8 + rand() % 6;
             room.height = 8 + rand() % 6;
-            room.x = rooms[total_rooms - 2].x + rooms[total_rooms - 2].width + 16;
-            room.y = rooms[total_rooms - 2].y - 6;
+            room.x = game->levels[game->currentLevel]->rooms[total_rooms - 2]->x + game->levels[game->currentLevel]->rooms[total_rooms - 2]->width + 16;
+            room.y = game->levels[game->currentLevel]->rooms[total_rooms - 2]->y - 6;
             is_secret = 1;
             create_room(&room);
-            create_secret_door(&room, rooms);
+            create_secret_door(&room, *game->levels[game->currentLevel]->rooms);
             create_food(&room);;
             create_gold(&room);
             create_spell(&room);
             create_weapon(&room);
             create_special_food(&room);
             room.type = 's';
-            rooms[total_rooms - 1] = room;
+            game->levels[game->currentLevel]->rooms[total_rooms - 1] = &room;
         }
-        for(int i = 0; i < total_rooms; i++){
-            game->levels[game->currentLevel]->rooms[i] = &rooms[i];
-        }
+        // for(int i = 0; i < total_rooms; i++){
+        //     game->levels[game->currentLevel]->rooms[i] = &rooms[i];
+        // }
     }
     else{
         is_treasure = 1;

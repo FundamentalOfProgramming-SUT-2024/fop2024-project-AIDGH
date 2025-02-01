@@ -1,9 +1,12 @@
-points: 100
+health: 100
+points: 0
 games count: 0
 play time: 0
 golds: 0
-food: 0
-weapons: []
-spells: []
-level: 1
+food: 100
+weapons: 0 
+spells: 0 
+ancientkey: 0 
+broken ancientkey: 0 
+level: 0
 map: 

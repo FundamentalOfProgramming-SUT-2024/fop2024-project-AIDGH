@@ -8,6 +8,11 @@
 #define COLOR_BRONZE1 33
 #define COLOR_GOLD1 34
 #define COLOR_ORANGE1 35
+#define COLOR_SECRET 36
+#define COLOR_Bisque 37
+#define COLOR_PURPLE1 38
+#define COLOR_ZERESHKI 39
+#define COLOR_BLUE1 40
 // #define COLOR_RED 20
 void print_menu(WINDOW *menu_win, int highlight, char **choices, int n_choices) {
     int x, y, i;
@@ -57,11 +62,16 @@ char* display_menu() {
     init_color(COLOR_KAKA, 1000, 600, 600);
     init_color(COLOR_RED, 1000, 0, 0);
     init_color(COLOR_GREEN1, 0, 1000, 0);
-    init_color(COLOR_YELLOW1, 1000, 1000, 0);
+    init_color(COLOR_YELLOW1, 1000, 1000, 200);
     init_color(COLOR_SILVER1, 753, 753, 753);
     init_color(COLOR_BRONZE1, 801, 496, 195);
     init_color(COLOR_GOLD1, 1000, 840, 0);
     init_color(COLOR_ORANGE1, 1000, 647, 0);
+    init_color(COLOR_SECRET, 118, 1000, 784);
+    init_color(COLOR_Bisque, 1000, 894, 769);
+    init_color(COLOR_PURPLE1, 655, 0, 843);
+    init_color(COLOR_ZERESHKI, 530, 0, 78);
+    init_color(COLOR_BLUE1, 0, 0, 1000);
     init_pair(1, COLOR_YELLOW, COLOR_BLACK);
     init_pair(2, COLOR_WHITE, COLOR_BLUE);
     init_pair(3, COLOR_CYAN, COLOR_BLACK);
@@ -76,6 +86,11 @@ char* display_menu() {
     init_pair(12, COLOR_GOLD1, COLOR_BLACK);
     init_pair(13, COLOR_WHITE, COLOR_BLACK);
     init_pair(14, COLOR_ORANGE1, COLOR_BLACK);
+    init_pair(15, COLOR_SECRET, COLOR_BLACK);
+    init_pair(16, COLOR_Bisque, COLOR_BLACK);
+    init_pair(17, COLOR_PURPLE1, COLOR_BLACK);
+    init_pair(18, COLOR_ZERESHKI, COLOR_BLACK);
+    init_pair(19, COLOR_BLUE1, COLOR_BLACK);
     curs_set(0);
     clear();
     noecho();

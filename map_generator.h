@@ -6,10 +6,11 @@
 #include <time.h>
 #include "game.h"
 
-#define ROOM_MIN_SIZE 6
-#define ROOM_MAX_SIZE 16
-#define ROOM_PADDING 1
-#define BORDER_PADDING 2
+#define ROOM_MIN_SIZE 7
+#define ROOM_MAX_SIZE 13
+#define ROOM_PADDING 2
+#define BORDER_PADDING 6
+#define INTERSECT_SPACE 4
 
 // typedef struct
 // {

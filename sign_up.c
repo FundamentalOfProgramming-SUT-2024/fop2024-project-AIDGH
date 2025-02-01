@@ -72,11 +72,12 @@ void user_save_data() {
         return;
     }
 
+    fprintf(file, "health: 100\n");
     fprintf(file, "points: 0\n");
     fprintf(file, "games count: 0\n");
     fprintf(file, "play time: 0\n");
     fprintf(file, "golds: 0\n");
-    fprintf(file, "food: 0\n");
+    fprintf(file, "food: 100\n");
     fprintf(file, "weapons: 0 \n");
     fprintf(file, "spells: 0 \n");
     fprintf(file, "ancientkey: 0 \n");

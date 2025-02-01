@@ -60,7 +60,7 @@ void display_scoreboard() {
         mvprintw(start_y + 3, start_x + (width - 24) / 2 + 4, "     |_____|      ");
         attroff(COLOR_PAIR(12));
         attron(COLOR_PAIR(6));
-        mvprintw(start_y - 1, start_x + (width - 24) / 2 + 10, "%s", users[0].username);
+        mvprintw(start_y - 1, start_x + (width - 24) / 2 + 13 - strlen(users[0].username) / 2, "%s", users[0].username);
         attroff(COLOR_PAIR(6));
 
         WINDOW *score_win = newwin(height, width, start_y + 5, start_x);
@@ -99,7 +99,12 @@ void display_scoreboard() {
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 3, "🥉");
             } else if (i == 3) {
                 wattroff(score_win, COLOR_PAIR(1));
+                wattron(score_win, COLOR_PAIR(14));
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 3, "🏅");
+            } else if (i == 4) {
+                wattroff(score_win, COLOR_PAIR(1));
+                wattron(score_win, COLOR_PAIR(16));
+                mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 3, " %lc", medal);
             } else if (i == num_users - 1) {
                 wattroff(score_win, COLOR_PAIR(1));
                 wattron(score_win, COLOR_PAIR(13));
@@ -131,6 +136,12 @@ void display_scoreboard() {
                 wattron(score_win, COLOR_PAIR(1));
             } else if (i == 2) {
                 wattroff(score_win, COLOR_PAIR(11));
+                wattron(score_win, COLOR_PAIR(1));
+            } else if (i == 3) {
+                wattroff(score_win, COLOR_PAIR(14));
+                wattron(score_win, COLOR_PAIR(1));
+            } else if (i == 4) {
+                wattroff(score_win, COLOR_PAIR(16));
                 wattron(score_win, COLOR_PAIR(1));
             } else if (i == num_users - 1) {
                 wattroff(score_win, COLOR_PAIR(13));
