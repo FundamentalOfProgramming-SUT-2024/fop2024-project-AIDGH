@@ -27,7 +27,7 @@ int load_user_info(const char *username, User *user) {
     }
     strcpy(user->username, our_user);
     fscanf(file, "health: %d\n", &user->health);
-    fscanf(file, "points: %d\n", &user->points);
+    fscanf(file, "points: %lld\n", &user->points);
     fscanf(file, "games count: %d\n", &user->games_count);
     fscanf(file, "play time: %d\n", &user->play_time);
     fscanf(file, "golds: %d\n", &user->golds);
@@ -95,43 +95,12 @@ int load_user_info(const char *username, User *user) {
     user->spellsCount = spellscount;
     user->weaponsCount = weaponscount;
     fscanf(file, "level: %d\n", &user->level);
-    fscanf(file, "map: %[^\n]\n", user->map);
+    fscanf(file, "game: %d\n", &user->have_game);
 
     fclose(file);
     return 1;
 }
 
-int save_user_game(Player *user) {
-    char filepath[100] = "users/";
-    strcat(filepath, user->name);
-    strcat(filepath, ".txt");
-
-    FILE *file = fopen(filepath, "w");
-    if (file == NULL) {
-        return 0;
-    }
-    fprintf(file, "health: %d\n", user->health);
-    fprintf(file, "points: %d\n", user->points);
-    fprintf(file, "games count: %d\n", user->games_count);
-    fprintf(file, "play time: %d\n", user->play_time);
-    fprintf(file, "golds: %d\n", user->gold);
-    fprintf(file, "food: %d\n", user->foodCount);
-
-    fprintf(file, "weapons: %d %s%d, %s%d, %s%d, %s%d, %s%d\n", user->weaponCount,
-    user->weapons[0].name, user->weapons[0].count, user->weapons[1].name, user->weapons[1].count, 
-    user->weapons[2].name, user->weapons[2].count, user->weapons[3].name, user->weapons[3].count, 
-    user->weapons[4].name, user->weapons[4].count);
-
-    fprintf(file, "spells: %d %s%d, %s%d, %s%d\n", user->spellCount, user->spells[0].name, user->spells[0].count,
-    user->spells[1].name, user->spells[1].count, user->spells[2].name, user->spells[2].count);
-    fprintf(file, "ancientkey: %d\n", user->acientKey);
-    fprintf(file, "broken ancientkey: %d\n", user->brokenAcientKey);
-    fprintf(file, "level: %d\n", user->level);
-    fprintf(file, "map: \n");
-
-    fclose(file);
-    return 1;
-}
 int read_all_users(User *users, int max_users) {
     DIR *dir;
     struct dirent *ent;
@@ -155,4 +124,89 @@ int read_all_users(User *users, int max_users) {
         return 0;
     }
     return count;
+}
+
+int save_just_user_info(Player *user) {
+    char filepath[100] = "users/";
+    strcat(filepath, user->name);
+    strcat(filepath, ".txt");
+
+    FILE *file = fopen(filepath, "w");
+    if (file == NULL) {
+        return 0;
+    }
+    fprintf(file, "health: %d\n", user->health);
+    fprintf(file, "points: %lld\n", user->points);
+    fprintf(file, "games count: %d\n", user->games_count);
+    fprintf(file, "play time: %d\n", user->play_time);
+    fprintf(file, "golds: %d\n", user->gold);
+    fprintf(file, "food: %d\n", user->foodCount);
+
+    fprintf(file, "weapons: %d %s%d, %s%d, %s%d, %s%d, %s%d\n", user->weaponCount,
+    user->weapons[0].name, user->weapons[0].count, user->weapons[1].name, user->weapons[1].count, 
+    user->weapons[2].name, user->weapons[2].count, user->weapons[3].name, user->weapons[3].count, 
+    user->weapons[4].name, user->weapons[4].count);
+
+    fprintf(file, "spells: %d %s%d, %s%d, %s%d\n", user->spellCount, user->spells[0].name, user->spells[0].count,
+    user->spells[1].name, user->spells[1].count, user->spells[2].name, user->spells[2].count);
+    fprintf(file, "ancientkey: %d\n", user->acientKey);
+    fprintf(file, "broken ancientkey: %d\n", user->brokenAcientKey);
+    fprintf(file, "level: %d\n", user->level);
+    fprintf(file, "game: 0\n");
+
+    fclose(file);
+    return 1;
+}
+
+int save_user_game(Game *game) {
+    char filepath[100] = "users/";
+    strcat(filepath, game->player->name);
+    strcat(filepath, ".txt");
+
+    FILE *file = fopen(filepath, "w");
+    if (file == NULL) {
+        return 0;
+    }
+    fprintf(file, "health: %d\n", game->player->health);
+    fprintf(file, "points: %lld\n", game->player->points);
+    fprintf(file, "games count: %d\n", game->player->games_count);
+    fprintf(file, "play time: %d\n", game->player->play_time);
+    fprintf(file, "golds: %d\n", game->player->gold);
+    fprintf(file, "food: %d\n", game->player->foodCount);
+
+    fprintf(file, "weapons: %d %s%d, %s%d, %s%d, %s%d, %s%d\n", game->player->weaponCount,
+    game->player->weapons[0].name, game->player->weapons[0].count, game->player->weapons[1].name, game->player->weapons[1].count, 
+    game->player->weapons[2].name, game->player->weapons[2].count, game->player->weapons[3].name, game->player->weapons[3].count, 
+    game->player->weapons[4].name, game->player->weapons[4].count);
+
+    fprintf(file, "spells: %d %s%d, %s%d, %s%d\n", game->player->spellCount, game->player->spells[0].name, game->player->spells[0].count,
+    game->player->spells[1].name, game->player->spells[1].count, game->player->spells[2].name, game->player->spells[2].count);
+    fprintf(file, "ancientkey: %d\n", game->player->acientKey);
+    fprintf(file, "broken ancientkey: %d\n", game->player->brokenAcientKey);
+    fprintf(file, "level: %d\n", game->player->level);
+    fprintf(file, "game: %d\n", game->player->can_be_saved);
+    fprintf(file, "%d %d %d %d %d %d %d %d %d %d %d\n", game->player->cord.x, game->player->cord.y, game->player->room_num, game->player->level, 
+    game->player->Speed_effect, game->player->Power_effect, game->player->Health_effect, 
+    game->player->specialfoods[0].count, game->player->specialfoods[1].count, game->player->specialfoods[2].count, game->player->specialfoods[3].count);
+    fprintf(file, "%d %d %d %d %d %d\n", game->currentLevel, game->unlockedLevel, game->newLevel, game->levelCount, game->map_height, game->map_width);
+    for(int i = 0; i < game->unlockedLevel + 1; i++){
+        for(int j = 6; j < 100; j++){
+            for(int k = 6; k < 300; k++){
+                int a = 0;
+                if(game->whole_map[j][k]->isVisible == true){
+                    a = 1;
+                }
+                fprintf(file, "%d", game->whole_map[j][k]->item);
+            }
+            fprintf(file, "\n");
+        }
+    }
+        // int a = 0;
+        // if(game->levels[i]->is_secret_room == true){
+        //     a = 1;
+        // }
+        // fprintf(file, "%d%d%d%d\n", game->levels[i]->roomsCount, a, game->levels[i]->level, game->levels[i]->secret_room);
+
+    fclose(file);
+    return 1;
 }

@@ -7,6 +7,7 @@
 #include <string.h>
 #include "music.h"
 
+extern Mix_Music *music;
 void print_music_menu(WINDOW *music_win, int highlight, char **choices, int n_choices) {
     int x, y, i;
     x = 2;
@@ -129,15 +130,15 @@ void play_music(const char *filepath) {
         return;
     }
 
-    Mix_Music *music = Mix_LoadMUS(filepath);
-    if (!music) {
-        fprintf(stderr, "Failed to load music: %s\n", Mix_GetError());
-        return;
-    }
+    music = Mix_LoadMUS(filepath);
+    // if (!music) {
+    //     fprintf(stderr, "Failed to load music: %s\n", Mix_GetError());
+    //     return;
+    // }
 
     Mix_PlayMusic(music, 1);
 
-    printf("Playing %s...\nPress Enter to stop the music.\n", filepath);
+    // printf("Playing %s...\nPress Enter to stop the music.\n", filepath);
     // getchar();
 
     // Mix_FreeMusic(music);

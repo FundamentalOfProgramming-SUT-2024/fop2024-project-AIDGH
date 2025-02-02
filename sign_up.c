@@ -83,7 +83,7 @@ void user_save_data() {
     fprintf(file, "ancientkey: 0 \n");
     fprintf(file, "broken ancientkey: 0 \n");
     fprintf(file, "level: 1\n");
-    fprintf(file, "map: \n");
+    fprintf(file, "game: \n");
 
     fclose(file);
 

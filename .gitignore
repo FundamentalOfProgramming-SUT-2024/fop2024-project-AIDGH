@@ -5,3 +5,5 @@
 ./*.o
 ./exec
 ./*.pdf
+./Base_Sounds
+./coredumps

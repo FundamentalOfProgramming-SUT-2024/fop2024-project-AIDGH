@@ -43,11 +43,18 @@ void print_menu_before_game(WINDOW *menu_win, int highlight) {
     
     for (i = 0; i < n_choices_before_game; ++i) {
         if (highlight == i + 1) {
-            wattron(menu_win, A_BOLD | COLOR_PAIR(6));
+            wattron(menu_win, A_BOLD | COLOR_PAIR(6) | A_BLINK);
             mvwprintw(menu_win, y, x - 2, "* %s", choices_before_game[i]);
-            wattroff(menu_win, A_BOLD | COLOR_PAIR(6));
+            wattroff(menu_win, A_BOLD | COLOR_PAIR(6) | A_BLINK);
         } else {
+            if(i == 1 && current_user.have_game == 0){
+                wattron(menu_win, COLOR_PAIR(20));
+            }
             mvwprintw(menu_win, y, x - 2, "| %s", choices_before_game[i]);
+            if(i == 1 && current_user.have_game == 0){
+                wattroff(menu_win, COLOR_PAIR(20));
+            }
+            mvwprintw(menu_win, y, x - 2, "| ");
             // mvwprintw(menu_win, y - 1, x - 2, "|");
         }
         y += 2;
@@ -74,9 +81,11 @@ void before_game_menu() {
     print_menu_before_game(menu_win, highlight);
     
     while (1) {
+        int a = 0;
         c = wgetch(menu_win);
         switch (c) {
             case KEY_UP:
+                a = 1;
                 if (highlight == 1)
                     highlight = n_choices_before_game;
                 else
@@ -93,6 +102,12 @@ void before_game_menu() {
                 break;
             default:
                 break;
+        }
+        if(highlight == 2 && current_user.have_game == 0){
+            highlight++;
+            if(a){
+                highlight = 1;
+            }
         }
         print_menu_before_game(menu_win, highlight);
         if (choice != 0)

@@ -5,6 +5,8 @@
 #include <locale.h>
 #include <time.h>
 #include <string.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include "menu.h"
 #include "outro.h"
 #include "music.h"
@@ -20,7 +22,9 @@
 #include "scoreboard.h"
 #include "profile.h"
 #include "game.h"
+#include "pause_menu.h"
 
+Mix_Music *music;
 User current_user;
 extern Game *game;
 char our_user[50] = "guest";
@@ -41,6 +45,7 @@ int main() {
     new_game_check = 1;
     difficulty_efficiency = 1;
     escape_check = 0;
+    selected_music = "./Base_Sounds/silent.wav";
     srand(time(NULL));
     setlocale(LC_ALL, "");
     initscr();
@@ -116,8 +121,12 @@ int main() {
             refresh();
             display_profile();
             strcpy(which_menu, "Before game menu");
-        }else if (!strcmp(which_menu, " New Game ")) {
-            new_game_check = 1;
+        }else if (!strcmp(which_menu, " New Game ") || !strcmp(which_menu, " Continue Previous Game ")) {
+            new_game_check = 0;
+            if(!strcmp(which_menu, " New Game ")){
+                new_game_check = 1;
+            }
+            // music = Mix_LoadMUS(selected_music);
             if (selected_music != NULL) {
                 play_music(selected_music);
             }
@@ -127,20 +136,16 @@ int main() {
             }
             current_level = 0;
             unlocked_level = -1;
-            game_play();
-            // while(!escape_check){
-            //     clear(); 
-            //     refresh(); 
-            //     if(current_level > unlocked_level){
-            //         generate_map();
-            //     }
-            //     getch();
-            //     game_play();
-            // }
+            start_game();
             escape_check = 0;
             if(strcmp(which_user, "guest")){
-                save_user_game(game->player);
-                load_user_info(game->player->name, &current_user);
+                if(game->player->can_be_saved == 0){
+                    save_just_user_info(game->player);
+                    load_user_info(game->player->name, &current_user);
+                }
+                else{
+                    save_user_game(game);
+                }
             }
             if(!strcmp(which_user, "guest")){
                 strcpy(which_menu, "Guest before game menu");

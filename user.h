@@ -11,7 +11,7 @@ typedef struct {
     char username[50];
     char email[50];
     char password[50];
-    int points;
+    long long int points;
     int games_count;
     int play_time;
     int golds;
@@ -26,11 +26,13 @@ typedef struct {
     int brokenancientkey;
     char spells[MAX_SPELLS][MAX_NAME_LENGTH];
     int level;
+    int have_game;
     char map[500];
 } User;
 
 int load_user_info(const char *username, User *user);
-int save_user_game(Player *user);
+int save_just_user_info(Player *user);
+int save_user_game(Game *game);
 int read_all_users(User *users, int max_users);
 
 #endif // USER_H

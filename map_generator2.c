@@ -800,19 +800,19 @@ void create_lock_key(Room *room){
     }
 }
 
-int intersects(Room *rooms, int num_rooms, Room room, int total_rooms) {
+int intersects(int num_rooms, Room room, int total_rooms) {
     for (int i = 0; i < num_rooms; i++) {
-        if (room.x < rooms[i].x + rooms[i].width + ROOM_PADDING + (INTERSECT_SPACE - inter) &&
-            room.x + room.width + ROOM_PADDING > rooms[i].x - (INTERSECT_SPACE - inter) &&
-            room.y < rooms[i].y + rooms[i].height + ROOM_PADDING + (INTERSECT_SPACE - inter) &&
-            room.y + room.height + ROOM_PADDING > rooms[i].y - (INTERSECT_SPACE - inter)) {
+        if (room.x < game->levels[game->currentLevel]->rooms[i]->x + game->levels[game->currentLevel]->rooms[i]->width + ROOM_PADDING + (INTERSECT_SPACE - inter) &&
+            room.x + room.width + ROOM_PADDING > game->levels[game->currentLevel]->rooms[i]->x - (INTERSECT_SPACE - inter) &&
+            room.y < game->levels[game->currentLevel]->rooms[i]->y + game->levels[game->currentLevel]->rooms[i]->height + ROOM_PADDING + (INTERSECT_SPACE - inter) &&
+            room.y + room.height + ROOM_PADDING > game->levels[game->currentLevel]->rooms[i]->y - (INTERSECT_SPACE - inter)) {
             return 1;
         }
     }
-    if (room.x < rooms[total_rooms - 1].x + rooms[total_rooms - 1].width + ROOM_PADDING + (INTERSECT_SPACE - inter) &&
-        room.x + room.width + ROOM_PADDING > rooms[total_rooms - 1].x - (INTERSECT_SPACE - inter) &&
-        room.y < rooms[total_rooms - 1].y + rooms[total_rooms - 1].height + ROOM_PADDING + (INTERSECT_SPACE - inter) &&
-        room.y + room.height + ROOM_PADDING > rooms[total_rooms - 1].y - (INTERSECT_SPACE - inter)) {
+    if (room.x < game->levels[game->currentLevel]->rooms[total_rooms - 1]->x + game->levels[game->currentLevel]->rooms[total_rooms - 1]->width + ROOM_PADDING + (INTERSECT_SPACE - inter) &&
+        room.x + room.width + ROOM_PADDING > game->levels[game->currentLevel]->rooms[total_rooms - 1]->x - (INTERSECT_SPACE - inter) &&
+        room.y < game->levels[game->currentLevel]->rooms[total_rooms - 1]->y + game->levels[game->currentLevel]->rooms[total_rooms - 1]->height + ROOM_PADDING + (INTERSECT_SPACE - inter) &&
+        room.y + room.height + ROOM_PADDING > game->levels[game->currentLevel]->rooms[total_rooms - 1]->y - (INTERSECT_SPACE - inter)) {
         return 1;
     }
     return 0;
@@ -991,7 +991,7 @@ void sleeping(){
 void generate_map() {
     clear();
     // Room rooms[10];
-    Room rooms[12];
+    // Room rooms[12];
     int num_rooms = 0;
     int room_checker[1000][2], t = 0;
     int map_width, map_height;
@@ -1003,11 +1003,13 @@ void generate_map() {
     int end_y = map_height * 3 / 4 - BORDER_PADDING;
     srand(time(NULL));
     start_color();
+    {
     // init_pair(1, COLOR_YELLOW, COLOR_BLACK);
     // corridors = malloc(50 * sizeof(Corridor *));
     // for(int i = 0; i < 50; i++){
     //     corridors[i] = malloc(1 * sizeof(Corridor));
     // }
+    }
     if(game->currentLevel < game->levelCount - 1){
         total_rooms = 6 + rand() % 3;
         int total_rooms_1 = total_rooms;
@@ -1022,14 +1024,13 @@ void generate_map() {
             game->levels[game->currentLevel]->rooms[i] = malloc(sizeof(Room));
         }
         Room room;
-        room.width = ROOM_MIN_SIZE + 3 + rand() % (ROOM_MAX_SIZE - ROOM_MIN_SIZE + 1);
-        room.height = ROOM_MIN_SIZE + 2 + rand() % (5);
-        room.x = start_x + end_x - 30 - rand() % (25 - room.width - start_x);
-        room.y = start_y + end_y - 16 - rand() % (25 - room.height - start_y);
-        room.isVisible = false;
+        game->levels[game->currentLevel]->rooms[total_rooms - 1]->width = ROOM_MIN_SIZE + 3 + rand() % (ROOM_MAX_SIZE - ROOM_MIN_SIZE + 1);
+        game->levels[game->currentLevel]->rooms[total_rooms - 1]->height = ROOM_MIN_SIZE + 2 + rand() % (5);
+        game->levels[game->currentLevel]->rooms[total_rooms - 1]->x = start_x + end_x - 30 - rand() % (25 - game->levels[game->currentLevel]->rooms[total_rooms - 1]->width - start_x);
+        game->levels[game->currentLevel]->rooms[total_rooms - 1]->y = start_y + end_y - 16 - rand() % (25 - game->levels[game->currentLevel]->rooms[total_rooms - 1]->height - start_y);
+        game->levels[game->currentLevel]->rooms[total_rooms - 1]->isVisible = false;
         is_stair = 1;
-        create_room(&room);
-        game->levels[game->currentLevel]->rooms[total_rooms - 1] = &room;
+        create_room(game->levels[game->currentLevel]->rooms[total_rooms - 1]);
         game->levels[game->currentLevel]->rooms[total_rooms - 1]->index = total_rooms - 1;
         
         while (num_rooms < total_rooms - 1) {
@@ -1050,7 +1051,8 @@ void generate_map() {
                 create_room(&room);
                 is_stair = 0;
                 room.index = 0;
-                game->levels[game->currentLevel]->rooms[num_rooms++] = &room;
+                game->levels[game->currentLevel]->rooms[num_rooms] = &room;
+                num_rooms++;
             }
             counter++;
             if(counter >= 10000){
@@ -1061,31 +1063,33 @@ void generate_map() {
                 room.x = start_x + 5 + rand() % (end_x - room.width - start_x);
                 room.y = start_y + 5 + rand() % (end_y - room.height - start_y - 5);
                 inter = 4;
-                if (!intersects(*game->levels[game->currentLevel]->rooms, num_rooms, room, total_rooms)) {
+                if (!intersects(num_rooms, room, total_rooms)) {
                     counter = 0;
                     inter = 0;
                     create_room(&room);
                     room.index = num_rooms;
                     room.isVisible = false;
-                    game->levels[game->currentLevel]->rooms[num_rooms++] = &room;
+                    game->levels[game->currentLevel]->rooms[num_rooms] = &room;
+                    num_rooms++;
                 }
             }
-            else if (!intersects(*game->levels[game->currentLevel]->rooms, num_rooms, room, total_rooms)) {
+            else if (!intersects(num_rooms, room, total_rooms)) {
                 counter = 0;
                 inter = 0;
                 create_room(&room);
                 room.index = num_rooms;
                 room.isVisible = false;
-                game->levels[game->currentLevel]->rooms[num_rooms++] = &room;
+                game->levels[game->currentLevel]->rooms[num_rooms] = &room;
+                num_rooms++;
             }
         }
         num_rooms++;
 
         int k = 0;
-        while(k < total_rooms * total_rooms * 2 || check_rooms_validate(room_checker, t, num_rooms)){
-            connect_random_rooms(*game->levels[game->currentLevel]->rooms, num_rooms, room_checker, &t);
-            k++;
-        }
+        // while(k < total_rooms * total_rooms * 2 || check_rooms_validate(room_checker, t, num_rooms)){
+        //     connect_random_rooms(*game->levels[game->currentLevel]->rooms, num_rooms, room_checker, &t);
+        //     k++;
+        // }
 
         draw_stair_1(game->levels[game->currentLevel]->rooms[num_rooms - 1]);
         if(game->currentLevel > 0){
@@ -1199,4 +1203,3 @@ void generate_map() {
     erase();
     refresh();
 }
-

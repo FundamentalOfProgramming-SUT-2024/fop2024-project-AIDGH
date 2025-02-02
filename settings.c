@@ -20,6 +20,7 @@ void print_setting_menu(WINDOW *menu_win, int highlight) {
     y = 15;
     box(menu_win, 0, 0);
     wattron(menu_win, COLOR_PAIR(14));
+    wattron(menu_win, A_BLINK);
     mvwprintw(menu_win, 0, 0,  "                     __/\\_/\\__                     ");
     mvwprintw(menu_win, 1, 0,  "                    /\\       /\\                    ");
     mvwprintw(menu_win, 2, 0,  "                   /  \\_____/  \\                   ");
@@ -31,6 +32,7 @@ void print_setting_menu(WINDOW *menu_win, int highlight) {
     mvwprintw(menu_win, 8, 0,  "                    \\_/\\_&_/\\_/                    ");
     mvwprintw(menu_win, 9, 0,  " ");
     mvwprintw(menu_win, 9, 49,  " ");
+    wattroff(menu_win, A_BLINK);
     wattroff(menu_win, COLOR_PAIR(14));
     mvwprintw(menu_win, 10, 0, "┌────────────────────[Setting]───────────────────┐");
     mvwprintw(menu_win, 11, 2, "          ____ ____ ____ ____ ____ ");

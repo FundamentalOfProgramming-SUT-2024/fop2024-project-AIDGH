@@ -13,6 +13,8 @@
 #define COLOR_PURPLE1 38
 #define COLOR_ZERESHKI 39
 #define COLOR_BLUE1 40
+#define COLOR_SILVER2 41
+#define COLOR_TREASURE 42
 // #define COLOR_RED 20
 void print_menu(WINDOW *menu_win, int highlight, char **choices, int n_choices) {
     int x, y, i;
@@ -72,6 +74,8 @@ char* display_menu() {
     init_color(COLOR_PURPLE1, 655, 0, 843);
     init_color(COLOR_ZERESHKI, 530, 0, 78);
     init_color(COLOR_BLUE1, 0, 0, 1000);
+    init_color(COLOR_SILVER2, 550, 550, 550);
+    init_color(COLOR_TREASURE, 224 * 4, 217 * 4, 128 * 4);
     init_pair(1, COLOR_YELLOW, COLOR_BLACK);
     init_pair(2, COLOR_WHITE, COLOR_BLUE);
     init_pair(3, COLOR_CYAN, COLOR_BLACK);
@@ -91,6 +95,9 @@ char* display_menu() {
     init_pair(17, COLOR_PURPLE1, COLOR_BLACK);
     init_pair(18, COLOR_ZERESHKI, COLOR_BLACK);
     init_pair(19, COLOR_BLUE1, COLOR_BLACK);
+    init_pair(20, COLOR_SILVER2, COLOR_BLACK);
+    init_pair(21, 247, COLOR_BLACK);
+    init_pair(22, COLOR_TREASURE, COLOR_BLACK);
     curs_set(0);
     clear();
     noecho();

@@ -26,6 +26,7 @@ typedef struct
     Point cord;
     char type; // 'n' -> normal; 's' -> secret; 'l' -> locked;  'h' -> hard locked
     int password;
+    int password2;
     bool is_open;
 } Door;
 
@@ -46,6 +47,7 @@ typedef struct
     int count;
     int damage;
     int range;
+    int move;
     Point cord;
 } Weapon;
 
@@ -115,6 +117,7 @@ typedef struct
     Stair stair;
     Point ancientkey;
     Point password_generator;
+    Point password_generator2;
     int pillarcount;
     int keyCount;
     int lock_door;
@@ -125,6 +128,7 @@ typedef struct
     int spellCount;
     int trapCount;
     int enemyCount;
+    int enemyLeft;
     int newWeaponsCount;
     char type; // 'm' -> nightmare / madness; 'n' -> normal; 's' -> secret; 't' -> tresure; 'p' -> spell / posion
     int stairCount;
@@ -136,11 +140,11 @@ typedef struct
     Point cord;
     int health;
     int state; // 0 -> in Corridor ; 1 -> in room
-    Room *room;
-    Corridor *Corridor;
+    // Room *room;
+    // Corridor *Corridor;
     Weapon* weapons;
     Spell* spells;
-    Food* foods;
+    // Food* foods;
     int foodCount;
     int weaponCount;
     int spellCount;
@@ -150,13 +154,14 @@ typedef struct
     char color[10];
     int acientKey;
     int gold;
-    int points;
+    long long int points;
     int games_count;
     int play_time;
     int brokenAcientKey;
     int Speed_effect;
     int Power_effect;
     int Health_effect;
+    int can_be_saved;
     Food *specialfoods;
     Weapon currentWeapon;
 } Player;
@@ -164,7 +169,7 @@ typedef struct
 typedef struct
 {
     Room **rooms;
-    Corridor **Corridors;
+    // Corridor **Corridors;
     Point key;
     int roomsCount;
     bool is_secret_room;
@@ -178,11 +183,16 @@ typedef struct
     Player *player;
     int currentLevel;
     int unlockedLevel;
+    int newLevel;
     int levelCount;
+    int map_height;
+    int map_width;
     bool new_game;
+    Map whole_map[6][100][300];
 } Game;
 
-void game_play();
+void start_game();
+void game_play(WINDOW *game_win);
 void print_map(WINDOW *game_win);
 void draw_room(WINDOW *game_win, Room *room, int room_number);
 

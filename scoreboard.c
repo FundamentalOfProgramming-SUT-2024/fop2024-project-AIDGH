@@ -115,14 +115,14 @@ void display_scoreboard() {
             if (!strcmp(users[i].username, our_user)) {
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 1, "%d", i + 1);
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 7, " %s <--", users[i].username);
-                mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 29, "%d", users[i].points);
+                mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 29, "%lld", users[i].points);
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 39, "%d", users[i].golds);
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 49, "%d", users[i].games_count);
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 64, "%d", users[i].play_time);
             } else {
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 1, "%d", i + 1);
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 7, " %s", users[i].username);
-                mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 29, "%d", users[i].points);
+                mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 29, "%lld", users[i].points);
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 39, "%d", users[i].golds);
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 49, "%d", users[i].games_count);
                 mvwprintw(score_win, (i % USERS_PER_PAGE) + 4, 64, "%d", users[i].play_time);
