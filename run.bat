@@ -1,2 +1,1 @@
-gcc main.c menu.c outro.c music.c sign_up.c login.c before_game_menu.c guest_before_game_menu.c map_generator.c settings.c color_change.c profile.c scoreboard.c difficulty.c user.c game.c -o main.out -lncursesw -lSDL2 -lSDL2_mixer && ./main.out
-pause
+gcc main.c menu.c outro.c music.c sign_up.c login.c before_game_menu.c guest_before_game_menu.c map_generator.c settings.c color_change.c profile.c scoreboard.c difficulty.c user.c pause_menu.c game.c -o main.out -lncursesw -lSDL2 -lSDL2_mixer && ./main.out

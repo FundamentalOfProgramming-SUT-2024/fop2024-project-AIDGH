@@ -31,6 +31,7 @@ typedef struct {
 } User;
 
 int load_user_info(const char *username, User *user);
+int load_user_game();
 int save_just_user_info(Player *user);
 int save_user_game(Game *game);
 int read_all_users(User *users, int max_users);

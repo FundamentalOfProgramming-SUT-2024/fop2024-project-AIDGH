@@ -15,6 +15,7 @@
 #include "guest_before_game_menu.h"
 
 extern char our_user[50];
+extern Game *game;
 
 int load_user_info(const char *username, User *user) {
     char filepath[100] = "users/";
@@ -185,28 +186,322 @@ int save_user_game(Game *game) {
     fprintf(file, "broken ancientkey: %d\n", game->player->brokenAcientKey);
     fprintf(file, "level: %d\n", game->player->level);
     fprintf(file, "game: %d\n", game->player->can_be_saved);
-    fprintf(file, "%d %d %d %d %d %d %d %d %d %d %d\n", game->player->cord.x, game->player->cord.y, game->player->room_num, game->player->level, 
-    game->player->Speed_effect, game->player->Power_effect, game->player->Health_effect, 
+    fprintf(file, "%d %d %d %d %d %d %d %d %d %d %d %d\n", game->player->cord.x, game->player->cord.y, game->player->room_num, game->player->level, 
+    game->player->Speed_effect, game->player->Power_effect, game->player->Health_effect, game->player->shield, 
     game->player->specialfoods[0].count, game->player->specialfoods[1].count, game->player->specialfoods[2].count, game->player->specialfoods[3].count);
     fprintf(file, "%d %d %d %d %d %d\n", game->currentLevel, game->unlockedLevel, game->newLevel, game->levelCount, game->map_height, game->map_width);
     for(int i = 0; i < game->unlockedLevel + 1; i++){
-        for(int j = 6; j < 100; j++){
-            for(int k = 6; k < 300; k++){
+        for(int j = 0; j < game->map_height + 1; j++){
+            for(int k = 0; k < game->map_width + 1; k++){
                 int a = 0;
-                if(game->whole_map[j][k]->isVisible == true){
+                if(game->whole_map[i][j][k].isVisible == true){
                     a = 1;
                 }
-                fprintf(file, "%d", game->whole_map[j][k]->item);
+                fprintf(file, "%d %d ", game->whole_map[i][j][k].item, a);
             }
             fprintf(file, "\n");
         }
     }
-        // int a = 0;
-        // if(game->levels[i]->is_secret_room == true){
-        //     a = 1;
-        // }
-        // fprintf(file, "%d%d%d%d\n", game->levels[i]->roomsCount, a, game->levels[i]->level, game->levels[i]->secret_room);
+    for(int i = 0; i < game->unlockedLevel + 1; i++){
+        int a = 0;
+        if(game->levels[i]->is_secret_room == true){
+            a = 1;
+        }
+        fprintf(file, "%d %d %d %d %d %d\n", game->levels[i]->roomsCount, a, game->levels[i]->level, game->levels[i]->secret_room, game->levels[i]->key.x, game->levels[i]->key.y);
+        for(int j = 0; j < game->levels[i]->roomsCount; j++){
+            int b = 0;
+            if(game->levels[i]->rooms[j]->isVisible == true){
+                b = 1;
+            }
+            fprintf(file, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %c %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", 
+            game->levels[i]->rooms[j]->x, game->levels[i]->rooms[j]->y, game->levels[i]->rooms[j]->height, game->levels[i]->rooms[j]->width, 
+            game->levels[i]->rooms[j]->doorCount, b, game->levels[i]->rooms[j]->index, game->levels[i]->rooms[j]->pillarCount, game->levels[i]->rooms[j]->keyCount, 
+            game->levels[i]->rooms[j]->lock_door, game->levels[i]->rooms[j]->foodCount, game->levels[i]->rooms[j]->specialfoodCount, game->levels[i]->rooms[j]->goldCount, 
+            game->levels[i]->rooms[j]->weaponCount, game->levels[i]->rooms[j]->spellCount, game->levels[i]->rooms[j]->trapCount, game->levels[i]->rooms[j]->enemyCount, 
+            game->levels[i]->rooms[j]->enemyLeft, game->levels[i]->rooms[j]->type, game->levels[i]->rooms[j]->stairCount, game->levels[i]->rooms[j]->lock_attemps, 
+            game->levels[i]->rooms[j]->window.x, game->levels[i]->rooms[j]->window.y, game->levels[i]->rooms[j]->stair.cord.x, game->levels[i]->rooms[j]->stair.cord.y, 
+            game->levels[i]->rooms[j]->stair.from, game->levels[i]->rooms[j]->stair.to, 
+            game->levels[i]->rooms[j]->ancientkey.x, game->levels[i]->rooms[j]->ancientkey.y, 
+            game->levels[i]->rooms[j]->password_generator.x, game->levels[i]->rooms[j]->password_generator.y, 
+            game->levels[i]->rooms[j]->password_generator2.x, game->levels[i]->rooms[j]->password_generator2.y);
+            for(int k = 0; k < game->levels[i]->rooms[j]->doorCount; k++){
+                int c = 0;
+                if(game->levels[i]->rooms[j]->doors[k].is_open == true){
+                    c = 1;
+                }
+                fprintf(file, "%c %d %d %d %d %d\n", game->levels[i]->rooms[j]->doors[k].type, game->levels[i]->rooms[j]->doors[k].cord.x, game->levels[i]->rooms[j]->doors[k].cord.y, 
+                game->levels[i]->rooms[j]->doors[k].password, game->levels[i]->rooms[j]->doors[k].password2, c);
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->pillarCount; k++){
+                fprintf(file, "%d %d\n", game->levels[i]->rooms[j]->pillars[k].x, game->levels[i]->rooms[j]->pillars[k].y);
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->foodCount; k++){
+                int c = 0;
+                if(game->levels[i]->rooms[j]->foods[i].isUsed == true){
+                    c = 1;
+                }
+                fprintf(file, "%c %d %d %d %d\n", game->levels[i]->rooms[j]->foods[k].type, game->levels[i]->rooms[j]->foods[k].cord.x, game->levels[i]->rooms[j]->foods[k].cord.y, 
+                game->levels[i]->rooms[j]->foods[k].health, c);
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->shieldCount; k++){
+                int c = 0;
+                if(game->levels[i]->rooms[j]->shields[i].isUsed == true){
+                    c = 1;
+                }
+                fprintf(file, "%d %d %d %d\n", game->levels[i]->rooms[j]->shields[k].cord.x, game->levels[i]->rooms[j]->shields[k].cord.y, game->levels[i]->rooms[j]->shields[k].amount, c);
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->specialfoodCount; k++){
+                int c = 0;
+                if(game->levels[i]->rooms[j]->specialfoods[i].isUsed == true){
+                    c = 1;
+                }
+                fprintf(file, "%c %d %d %d\n", game->levels[i]->rooms[j]->specialfoods[k].type, game->levels[i]->rooms[j]->specialfoods[k].cord.x, game->levels[i]->rooms[j]->specialfoods[k].cord.y, c);
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->goldCount; k++){
+                int c = 0;
+                if(game->levels[i]->rooms[j]->golds[i].isUsed == true){
+                    c = 1;
+                }
+                fprintf(file, "%c %d %d %d %d\n", game->levels[i]->rooms[j]->golds[k].type, game->levels[i]->rooms[j]->golds[k].cord.x, game->levels[i]->rooms[j]->golds[k].cord.y, game->levels[i]->rooms[j]->golds[k].count, c);
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->weaponCount; k++){
+                int c = 0;
+                if(game->levels[i]->rooms[j]->weapons[i].isUsed == true){
+                    c = 1;
+                }
+                fprintf(file, "%c %d %d %d %d %s %d\n", game->levels[i]->rooms[j]->weapons[k].type, game->levels[i]->rooms[j]->weapons[k].cord.x, game->levels[i]->rooms[j]->weapons[k].cord.y, 
+                game->levels[i]->rooms[j]->weapons[k].damage, game->levels[i]->rooms[j]->weapons[k].range, game->levels[i]->rooms[j]->weapons[k].name, c);
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->spellCount; k++){
+                int c = 0;
+                if(game->levels[i]->rooms[j]->spells[i].isUsed == true){
+                    c = 1;
+                }
+                fprintf(file, "%c %d %d %s %d\n", game->levels[i]->rooms[j]->spells[k].type, game->levels[i]->rooms[j]->spells[k].cord.x, game->levels[i]->rooms[j]->spells[k].cord.y, 
+                game->levels[i]->rooms[j]->spells[k].name, c);
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->trapCount; k++){
+                int c = 0;
+                if(game->levels[i]->rooms[j]->traps[i].isVisible == true){
+                    c = 1;
+                }
+                fprintf(file, "%d %d %d %d\n", game->levels[i]->rooms[j]->traps[k].cord.x, game->levels[i]->rooms[j]->traps[k].cord.y, game->levels[i]->rooms[j]->traps[k].damage, c);
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->enemyCount; k++){
+                int c1 = 0, c2 = 0, c3 = 0;
+                if(game->levels[i]->rooms[j]->enemies[i].isAlive == true){
+                    c1 = 1;
+                }
+                if(game->levels[i]->rooms[j]->enemies[i].canMove == true){
+                    c2 = 1;
+                }
+                if(game->levels[i]->rooms[j]->enemies[i].isVisible == true){
+                    c3 = 1;
+                }
+                fprintf(file, "%c %d %d %d %d %d %s %d %d %d\n", game->levels[i]->rooms[j]->enemies[k].type, game->levels[i]->rooms[j]->enemies[k].cord.x, game->levels[i]->rooms[j]->enemies[k].cord.y, 
+                game->levels[i]->rooms[j]->enemies[k].damage, game->levels[i]->rooms[j]->enemies[k].moves, game->levels[i]->rooms[j]->enemies[k].health, game->levels[i]->rooms[j]->enemies[k].name, c1, c2, c3);
+            }
+        }
+    }
+    fclose(file);
+    return 1;
+}
 
+int load_user_game() {
+    char filepath[100] = "users/";
+    strcat(filepath, game->player->name);
+    strcat(filepath, ".txt");
+
+    FILE *file = fopen(filepath, "r");
+    if (file == NULL) {
+        return 0;
+    }
+    fscanf(file, "health: %d\n", &game->player->health);
+    fscanf(file, "points: %lld\n", &game->player->points);
+    fscanf(file, "games count: %d\n", &game->player->games_count);
+    fscanf(file, "play time: %d\n", &game->player->play_time);
+    fscanf(file, "golds: %d\n", &game->player->gold);
+    fscanf(file, "food: %d\n", &game->player->foodCount);
+    int spellscount, weaponscount;
+    char weapons_line[500];
+    fscanf(file, "weapons: %d %[^\n]\n", &weaponscount, weapons_line);
+    char spells_line[500];
+    fscanf(file, "spells: %d %[^\n]\n", &spellscount, spells_line);
+    fscanf(file, "ancientkey: %d\n", &game->player->acientKey);
+    fscanf(file, "broken ancientkey: %d\n", &game->player->brokenAcientKey);
+    fscanf(file, "level: %d\n", &game->player->level);
+    fscanf(file, "game: %d\n", &game->player->can_be_saved);
+
+    fscanf(file, "%d %d %d %d %d %d %d %d %d %d %d %d\n", &game->player->cord.x, &game->player->cord.y, &game->player->room_num, &game->player->level, 
+    &game->player->Speed_effect, &game->player->Power_effect, &game->player->Health_effect, &game->player->shield, 
+    &game->player->specialfoods[0].count, &game->player->specialfoods[1].count, &game->player->specialfoods[2].count, &game->player->specialfoods[3].count);
+    fscanf(file, "%d %d %d %d %d %d\n", &game->currentLevel, &game->unlockedLevel, &game->newLevel, &game->levelCount, &game->map_height, &game->map_width);
+    for(int i = 0; i < game->unlockedLevel + 1; i++){
+        for(int j = 0; j < game->map_height + 1; j++){
+            for(int k = 0; k < game->map_width + 1; k++){
+                int a;
+                fscanf(file, "%d %d ", &game->whole_map[i][j][k].item, &a);
+                if(a == 1){
+                    game->whole_map[i][j][k].isVisible = true;
+                }
+                else{
+                    game->whole_map[i][j][k].isVisible = false;
+                }
+            }
+            fscanf(file, "\n");
+        }
+    }
+    for(int i = 0; i < game->unlockedLevel + 1; i++){
+        int a;
+        fscanf(file, "%d %d %d %d %d %d\n", &game->levels[i]->roomsCount, &a, &game->levels[i]->level, &game->levels[i]->secret_room, &game->levels[i]->key.x, &game->levels[i]->key.y);
+        if(a == 1){
+            game->levels[i]->is_secret_room = true;
+        }
+        else{
+            game->levels[i]->is_secret_room = false;
+        }
+        for(int j = 0; j < game->levels[i]->roomsCount; j++){
+            int b;
+            fscanf(file, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %c %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", 
+            &game->levels[i]->rooms[j]->x, &game->levels[i]->rooms[j]->y, &game->levels[i]->rooms[j]->height, &game->levels[i]->rooms[j]->width, 
+            &game->levels[i]->rooms[j]->doorCount, &b, &game->levels[i]->rooms[j]->index, &game->levels[i]->rooms[j]->pillarCount, &game->levels[i]->rooms[j]->keyCount, 
+            &game->levels[i]->rooms[j]->lock_door, &game->levels[i]->rooms[j]->foodCount, &game->levels[i]->rooms[j]->specialfoodCount, &game->levels[i]->rooms[j]->goldCount, 
+            &game->levels[i]->rooms[j]->weaponCount, &game->levels[i]->rooms[j]->spellCount, &game->levels[i]->rooms[j]->trapCount, &game->levels[i]->rooms[j]->enemyCount, 
+            &game->levels[i]->rooms[j]->enemyLeft, &game->levels[i]->rooms[j]->type, &game->levels[i]->rooms[j]->stairCount, &game->levels[i]->rooms[j]->lock_attemps, 
+            &game->levels[i]->rooms[j]->window.x, &game->levels[i]->rooms[j]->window.y, &game->levels[i]->rooms[j]->stair.cord.x, &game->levels[i]->rooms[j]->stair.cord.y, 
+            &game->levels[i]->rooms[j]->stair.from, &game->levels[i]->rooms[j]->stair.to, 
+            &game->levels[i]->rooms[j]->ancientkey.x, &game->levels[i]->rooms[j]->ancientkey.y, 
+            &game->levels[i]->rooms[j]->password_generator.x, &game->levels[i]->rooms[j]->password_generator.y, 
+            &game->levels[i]->rooms[j]->password_generator2.x, &game->levels[i]->rooms[j]->password_generator2.y);
+            if(b == 1){
+                game->levels[i]->rooms[j]->isVisible = true;
+            }
+            else{
+                game->levels[i]->rooms[j]->isVisible = false;
+            }
+            game->levels[i]->rooms[j]->doors = malloc(game->levels[i]->rooms[j]->doorCount * sizeof(Door));
+            game->levels[i]->rooms[j]->pillars = malloc(game->levels[i]->rooms[j]->pillarCount * sizeof(Point));
+            game->levels[i]->rooms[j]->foods = malloc(game->levels[i]->rooms[j]->foodCount * sizeof(Food));
+            game->levels[i]->rooms[j]->shields = malloc(game->levels[i]->rooms[j]->shieldCount * sizeof(Shield));
+            game->levels[i]->rooms[j]->specialfoods = malloc(game->levels[i]->rooms[j]->specialfoodCount * sizeof(Food));
+            game->levels[i]->rooms[j]->golds = malloc(game->levels[i]->rooms[j]->goldCount * sizeof(Gold));
+            game->levels[i]->rooms[j]->weapons = malloc(game->levels[i]->rooms[j]->weaponCount * sizeof(Weapon));
+            game->levels[i]->rooms[j]->spells = malloc(game->levels[i]->rooms[j]->spellCount * sizeof(Spell));
+            game->levels[i]->rooms[j]->traps = malloc(game->levels[i]->rooms[j]->trapCount * sizeof(Trap));
+            game->levels[i]->rooms[j]->enemies = malloc(game->levels[i]->rooms[j]->enemyCount * sizeof(Enemy));
+            for(int k = 0; k < game->levels[i]->rooms[j]->doorCount; k++){
+                int c;
+                fscanf(file, "%c %d %d %d %d %d\n", &game->levels[i]->rooms[j]->doors[k].type, &game->levels[i]->rooms[j]->doors[k].cord.x, &game->levels[i]->rooms[j]->doors[k].cord.y, 
+                &game->levels[i]->rooms[j]->doors[k].password, &game->levels[i]->rooms[j]->doors[k].password2, &c);
+                if(c == 1){
+                    game->levels[i]->rooms[j]->doors[k].is_open = true;
+                }
+                else{
+                    game->levels[i]->rooms[j]->doors[k].is_open = false;
+                }
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->pillarCount; k++){
+                fscanf(file, "%d %d\n", &game->levels[i]->rooms[j]->pillars[k].x, &game->levels[i]->rooms[j]->pillars[k].y);
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->foodCount; k++){
+                int c;
+                fscanf(file, "%c %d %d %d %d\n", &game->levels[i]->rooms[j]->foods[k].type, &game->levels[i]->rooms[j]->foods[k].cord.x, &game->levels[i]->rooms[j]->foods[k].cord.y, 
+                &game->levels[i]->rooms[j]->foods[k].health, &c);
+                if(c == 1){
+                    game->levels[i]->rooms[j]->foods[k].isUsed = true;
+                }
+                else{
+                    game->levels[i]->rooms[j]->foods[k].isUsed = false;
+                }
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->shieldCount; k++){
+                int c;
+                fscanf(file, "%d %d %d %d\n", &game->levels[i]->rooms[j]->shields[k].cord.x, &game->levels[i]->rooms[j]->shields[k].cord.y, &game->levels[i]->rooms[j]->shields[k].amount, &c);
+                if(c == 1){
+                    game->levels[i]->rooms[j]->shields[i].isUsed = true;
+                }
+                else{
+                    game->levels[i]->rooms[j]->shields[i].isUsed = false;
+                }
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->specialfoodCount; k++){
+                int c;
+                fscanf(file, "%c %d %d %d\n", &game->levels[i]->rooms[j]->specialfoods[k].type, &game->levels[i]->rooms[j]->specialfoods[k].cord.x, &game->levels[i]->rooms[j]->specialfoods[k].cord.y, &c);
+                if(c == 1){
+                    game->levels[i]->rooms[j]->specialfoods[i].isUsed = true;
+                }
+                else{
+                    game->levels[i]->rooms[j]->specialfoods[i].isUsed = false;
+                }
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->goldCount; k++){
+                int c;
+                fscanf(file, "%c %d %d %d %d\n", &game->levels[i]->rooms[j]->golds[k].type, &game->levels[i]->rooms[j]->golds[k].cord.x, &game->levels[i]->rooms[j]->golds[k].cord.y, &game->levels[i]->rooms[j]->golds[k].count, &c);
+                if(c == 1){
+                    game->levels[i]->rooms[j]->golds[i].isUsed = true;
+                }
+                else{
+                    game->levels[i]->rooms[j]->golds[i].isUsed = false;
+                }
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->weaponCount; k++){
+                int c;
+                fscanf(file, "%c %d %d %d %d %s %d\n", &game->levels[i]->rooms[j]->weapons[k].type, &game->levels[i]->rooms[j]->weapons[k].cord.x, &game->levels[i]->rooms[j]->weapons[k].cord.y, 
+                &game->levels[i]->rooms[j]->weapons[k].damage, &game->levels[i]->rooms[j]->weapons[k].range, game->levels[i]->rooms[j]->weapons[k].name, &c);
+                if(c == 1){
+                    game->levels[i]->rooms[j]->weapons[i].isUsed = true;
+                }
+                else{
+                    game->levels[i]->rooms[j]->weapons[i].isUsed = false;
+                }
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->spellCount; k++){
+                int c;
+                fscanf(file, "%c %d %d %s %d\n", &game->levels[i]->rooms[j]->spells[k].type, &game->levels[i]->rooms[j]->spells[k].cord.x, &game->levels[i]->rooms[j]->spells[k].cord.y, 
+                game->levels[i]->rooms[j]->spells[k].name, &c);
+                if(c == 1){
+                    game->levels[i]->rooms[j]->spells[i].isUsed = true;
+                }
+                else{
+                    game->levels[i]->rooms[j]->spells[i].isUsed = false;
+                }
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->trapCount; k++){
+                int c;
+                fscanf(file, "%d %d %d %d\n", &game->levels[i]->rooms[j]->traps[k].cord.x, &game->levels[i]->rooms[j]->traps[k].cord.y, &game->levels[i]->rooms[j]->traps[k].damage, &c);
+                if(c == 1){
+                    game->levels[i]->rooms[j]->traps[i].isVisible = true;
+                }
+                else{
+                    game->levels[i]->rooms[j]->traps[i].isVisible = false;
+                }
+            }
+            for(int k = 0; k < game->levels[i]->rooms[j]->enemyCount; k++){
+                int c1, c2, c3;
+                fscanf(file, "%c %d %d %d %d %d %s %d %d %d\n", &game->levels[i]->rooms[j]->enemies[k].type, &game->levels[i]->rooms[j]->enemies[k].cord.x, &game->levels[i]->rooms[j]->enemies[k].cord.y, 
+                &game->levels[i]->rooms[j]->enemies[k].damage, &game->levels[i]->rooms[j]->enemies[k].moves, &game->levels[i]->rooms[j]->enemies[k].health, game->levels[i]->rooms[j]->enemies[k].name, &c1, &c2, &c3);
+                if(c1 == 1){
+                    game->levels[i]->rooms[j]->enemies[i].isAlive = true;
+                }
+                else{
+                    game->levels[i]->rooms[j]->enemies[i].isAlive = false;
+                }
+                if(c2 == 1){
+                    game->levels[i]->rooms[j]->enemies[i].canMove = true;
+                }
+                else{
+                    game->levels[i]->rooms[j]->enemies[i].canMove = false;
+                }
+                if(c3 == 1){
+                    game->levels[i]->rooms[j]->enemies[i].isVisible = true;
+                }
+                else{
+                    game->levels[i]->rooms[j]->enemies[i].isVisible = false;
+                }
+            }
+            
+        }
+    }
     fclose(file);
     return 1;
 }

@@ -96,6 +96,27 @@ void pause_menu() {
     starty = (LINES - height) / 2;
     startx = (COLS - width) / 2;
     menu_win = newwin(height, width, starty, startx);
+    if(!strcmp(which_pause_menu, " Save and Quit ")){
+        wclear(menu_win);
+        for(int i = 0; i < 3; i++){
+            wattron(menu_win, COLOR_PAIR(20));
+            mvwprintw(menu_win, height / 2, width / 2 - 5, "Loading.  ");
+            wattroff(menu_win, COLOR_PAIR(20));
+            wrefresh(menu_win);
+            usleep(300000);
+            wattron(menu_win, COLOR_PAIR(21));
+            mvwprintw(menu_win,  height / 2, width / 2 - 5, "Loading.. ");
+            wattroff(menu_win, COLOR_PAIR(21));
+            wrefresh(menu_win);
+            usleep(300000);
+            wattron(menu_win, COLOR_PAIR(10));
+            mvwprintw(menu_win,  height / 2, width / 2 - 5, "Loading...");
+            wattroff(menu_win, COLOR_PAIR(10));
+            wrefresh(menu_win);
+            usleep(300000);
+        }
+        return;
+    }
     keypad(menu_win, TRUE);
     print_pause_menu(menu_win, highlight);
     
@@ -140,18 +161,19 @@ void pause_menu() {
             mvwprintw(menu_win, height / 2, width / 2 - 5, "Loading.  ");
             wattroff(menu_win, COLOR_PAIR(20));
             wrefresh(menu_win);
-            usleep(400000);
+            usleep(300000);
             wattron(menu_win, COLOR_PAIR(21));
             mvwprintw(menu_win,  height / 2, width / 2 - 5, "Loading.. ");
             wattroff(menu_win, COLOR_PAIR(21));
             wrefresh(menu_win);
-            usleep(400000);
+            usleep(300000);
             wattron(menu_win, COLOR_PAIR(10));
             mvwprintw(menu_win,  height / 2, width / 2 - 5, "Loading...");
             wattroff(menu_win, COLOR_PAIR(10));
             wrefresh(menu_win);
-            usleep(400000);
+            usleep(300000);
         }
+        return;
     }
     clrtoeol();
     refresh();

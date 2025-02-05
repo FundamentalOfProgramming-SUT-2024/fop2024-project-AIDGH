@@ -26,7 +26,7 @@ void display_profile() {
     mvwprintw(profile_win, 14, 4, "┌────────────────────────────────────────┐");
     mvwprintw(profile_win, 15, 4, "│ Username: %-28s │", current_user.username);
     mvwprintw(profile_win, 16, 4, "├────────────────────────────────────────┤");
-    mvwprintw(profile_win, 17, 4, "│ Points: %-30d │", current_user.points);
+    mvwprintw(profile_win, 17, 4, "│ Points: %-30lld │", current_user.points);
     mvwprintw(profile_win, 18, 4, "│ Games Count: %-25d │", current_user.games_count);
     mvwprintw(profile_win, 19, 4, "│ Play Time: %-27d │", current_user.play_time);
     mvwprintw(profile_win, 20, 4, "│ Golds: %-31d │", current_user.golds);

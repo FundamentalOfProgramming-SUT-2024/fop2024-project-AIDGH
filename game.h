@@ -41,6 +41,13 @@ typedef struct
 
 typedef struct
 {
+    int amount;
+    bool isUsed;
+    Point cord;
+} Shield;
+
+typedef struct
+{
     char type; // m -> mace; d -> dagger; w -> magic wand; a -> normal arrow; s -> sword
     char name[15];
     bool isUsed;
@@ -91,6 +98,7 @@ typedef struct
     int moves;
     bool isAlive;
     bool canMove;
+    bool isVisible;
     char name[21];
     Point cord;
 } Enemy;
@@ -106,6 +114,7 @@ typedef struct
     Point *pillars;
     bool isVisible;
     int index;
+    Shield *shields;
     Food *foods;
     Food *specialfoods;
     Gold *golds;
@@ -118,10 +127,11 @@ typedef struct
     Point ancientkey;
     Point password_generator;
     Point password_generator2;
-    int pillarcount;
+    int pillarCount;
     int keyCount;
     int lock_door;
     int foodCount;
+    int shieldCount;
     int specialfoodCount;
     int goldCount;
     int weaponCount;
@@ -130,7 +140,7 @@ typedef struct
     int enemyCount;
     int enemyLeft;
     int newWeaponsCount;
-    char type; // 'm' -> nightmare / madness; 'n' -> normal; 's' -> secret; 't' -> tresure; 'p' -> spell / posion
+    char type; // 'm' -> nightmare / madness; 'n' -> normal; 's' -> secret; 't' -> tresure; 'p' -> spell / posion; 'b' -> battle
     int stairCount;
     int lock_attemps;
 } Room;
@@ -146,6 +156,7 @@ typedef struct
     Spell* spells;
     // Food* foods;
     int foodCount;
+    int shield;
     int weaponCount;
     int spellCount;
     int room_num;

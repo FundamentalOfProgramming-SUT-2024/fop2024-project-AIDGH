@@ -142,17 +142,21 @@ int main() {
                 if(game->player->can_be_saved == 0){
                     save_just_user_info(game->player);
                     load_user_info(game->player->name, &current_user);
+                    current_user.have_game = 0;
                 }
                 else{
                     save_user_game(game);
+                    load_user_info(game->player->name, &current_user);
+                    current_user.have_game = 1;
                 }
             }
-            if(!strcmp(which_user, "guest")){
-                strcpy(which_menu, "Guest before game menu");
-            }
-            else{
-                strcpy(which_menu, "Before game menu");
-            }
+            strcpy(which_menu, "menu");
+            // if(!strcmp(which_user, "guest")){
+            //     strcpy(which_menu, "Guest before game menu");
+            // }
+            // else{
+            //     strcpy(which_menu, "Before game menu");
+            // }
         }
     }
     endwin();

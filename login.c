@@ -253,6 +253,9 @@ login:
         
         if (load_user_info(username, &current_user)) {
             mvwprintw(win, 14, 2, "User information loaded.");
+            // if(current_user.have_game == 1){
+
+            // }
             strcpy(current_user.password, password);
             get_email(username);
         } else {
